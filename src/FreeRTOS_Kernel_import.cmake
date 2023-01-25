@@ -1,4 +1,5 @@
-# Src: https://github.com/FreeRTOS/FreeRTOS-SMP-Demos/blob/c84926adafd83830f75c3b59c85988a9898b7351/FreeRTOS/Demo/CORTEX_M0+_RP2040/Standard/FreeRTOS_Kernel_import.cmake
+# Src: https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/260a37c082f4b70f9c6f361eadb0b29f1a448e3a/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake
+# Last fetched: 25/01/23
 
 # This is a copy of <FREERTOS_KERNEL_PATH>/portable/ThirdParty/GCC/RP2040/FREERTOS_KERNEL_import.cmake
 
@@ -35,8 +36,7 @@ endif ()
 if (NOT FREERTOS_KERNEL_PATH)
     foreach(POSSIBLE_SUFFIX Source FreeRTOS-Kernel FreeRTOS/Source)
         # check if FreeRTOS-Kernel exists under directory that included us
-        set(SEARCH_ROOT ${CMAKE_CURRENT_SOURCE_DIR}})
-        set(SEARCH_ROOT ../../../..)
+        set(SEARCH_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
         get_filename_component(_POSSIBLE_PATH ${SEARCH_ROOT}/${POSSIBLE_SUFFIX} REALPATH)
         if (EXISTS ${_POSSIBLE_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}/CMakeLists.txt)
             get_filename_component(FREERTOS_KERNEL_PATH ${_POSSIBLE_PATH} REALPATH)
