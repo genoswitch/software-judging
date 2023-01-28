@@ -1,3 +1,6 @@
+set(PICO_SDK_PATH ../../lib/pico-sdk)
+set(FREERTOS_KERNEL_PATH ../../lib/freertos-smp)
+
 # Min CMake version
 cmake_minimum_required(VERSION 3.13)
 
