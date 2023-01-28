@@ -5,3 +5,7 @@
 	path = lib/freertos-smp
 	url = https://github.com/FreeRTOS/FreeRTOS-Kernel
 	branch = smp
+[submodule "tinyusb"]
+	path = lib/tinyusb
+	url = https://github.com/hathach/tinyusb
+	branch = master
