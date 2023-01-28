@@ -21,7 +21,7 @@ pico_sdk_init()
 
 
 # Add executable targets
-#add_executable(main main.c)
+add_executable(main main.c)
 
 
 # RTOS config "FreeRTOSConfig.h"
@@ -32,5 +32,9 @@ target_include_directories(main PRIVATE ${CMAKE_CURRENT_LIST_DIR}/rtos-config/)
 # memory management: FreeRTOS-Kernel-Heap# required for pvPortMalloc
 target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
 
+# stdio only on UART (UART0 by default, pins 1 and 2)
+pico_enable_stdio_usb(main 0)
+pico_enable_stdio_uart(main 1)
+
 # Create extra files, such as .uf2
-#pico_add_extra_outputs(main)
+pico_add_extra_outputs(main)
