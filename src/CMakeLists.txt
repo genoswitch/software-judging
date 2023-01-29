@@ -1,5 +1,6 @@
 set(PICO_SDK_PATH ../lib/pico-sdk)
 set(FREERTOS_KERNEL_PATH ../lib/freertos-smp)
+set(PICO_TINYUSB_PATH ${CMAKE_CURRENT_LIST_DIR}/../lib/tinyusb)
 
 # Min CMake version
 cmake_minimum_required(VERSION 3.13)
