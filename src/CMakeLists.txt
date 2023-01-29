@@ -26,12 +26,25 @@ add_executable(main main.c)
 
 
 # RTOS config "FreeRTOSConfig.h"
-target_include_directories(main PRIVATE ${CMAKE_CURRENT_LIST_DIR}/rtos-config/)
+target_include_directories(main PRIVATE 
+    ${CMAKE_CURRENT_LIST_DIR}/rtos-config/
+    ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/
+
+)
+
+target_sources(main PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/main.c
+    ${CMAKE_CURRENT_LIST_DIR}/usb/tasks.c
+    # TinyUSB functions not picked up unless we include it here (tud_vendor_control_xfer_cb)
+    ${CMAKE_CURRENT_LIST_DIR}/usb/webusb.c
+    ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
+    )
 
 # Link to libraries  (after sdk init)
 # pico_stdlib needed as FreeRTOS uses panic_unsupported
 # memory management: FreeRTOS-Kernel-Heap# required for pvPortMalloc
-target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
+# tinyusb_device tinyusb_board (https://github.com/raspberrypi/pico-examples/blob/master/usb/device/dev_hid_composite/CMakeLists.txt)
+target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board)
 
 # stdio only on UART (UART0 by default, pins 1 and 2)
 pico_enable_stdio_usb(main 0)

@@ -8,6 +8,9 @@
 // Accompanying header file
 #include "main.h"
 
+// USB FreeRTOS tasks
+#include "usb/tasks.h"
+
 int main(void)
 {
     // Setup hardware (init stdio, etc.)
@@ -32,6 +35,11 @@ int main(void)
 #endif
 
     // Init some tasks!
+
+    pvCreateUsbTasks();
+
+    // TinyUSB demos call this after creating tasks.
+    vTaskStartScheduler();
 
     return 0;
 }
