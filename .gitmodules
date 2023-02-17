@@ -9,3 +9,7 @@
 	path = lib/tinyusb
 	url = https://github.com/hathach/tinyusb
 	branch = master
+[submodule "cmake-git-version-tracking"]
+	path = lib/cmake-git-version-tracking
+	url = https://github.com/andrew-hardin/cmake-git-version-tracking
+	branch = master
