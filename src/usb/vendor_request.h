@@ -11,7 +11,8 @@ enum
 enum
 {
     CUSTOM_REQUEST_UNKNOWN,
-    CUSTOM_REQUEST_VERSION
+    CUSTOM_REQUEST_VERSION,
+    CUSTOM_REQUEST_BUILD_INFO
 };
 
 // b prefix for byte value
@@ -27,5 +28,13 @@ typedef struct TU_ATTR_PACKED
     uint8_t bLength;
     uint8_t bCode;
 } req_unknown_value;
+
+typedef struct TU_ATTR_PACKED
+{
+    uint8_t bLength;
+    uint8_t bCode;
+    char sha1[40];
+    char date[25]; // Seems to be "YYYY-MM-DD HH:mm:ss +0000"
+} req_build_info;
 
 bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_request_t const *request);

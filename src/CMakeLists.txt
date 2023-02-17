@@ -11,6 +11,9 @@ include(pico_sdk_import.cmake)
 # Pull in FreeRTOS
 include(FreeRTOS_Kernel_import.cmake)
 
+# Include git version tracking submodule
+add_subdirectory(../lib/cmake-git-version-tracking git) # copy/compile to "git" folder in the build directory *^* build/git
+
 # Project definitions
 # Src: https://github.com/raspberrypi/pico-examples/blob/f800a7e3031e278062639e070c5764adb4a8a0fc/CMakeLists.txt#L6
 project(pico C CXX ASM)
@@ -45,7 +48,7 @@ target_sources(main PUBLIC
 # pico_stdlib needed as FreeRTOS uses panic_unsupported
 # memory management: FreeRTOS-Kernel-Heap# required for pvPortMalloc
 # tinyusb_device tinyusb_board (https://github.com/raspberrypi/pico-examples/blob/master/usb/device/dev_hid_composite/CMakeLists.txt)
-target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board)
+target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board cmake_git_version_tracking)
 
 # stdio only on UART (UART0 by default, pins 1 and 2)
 pico_enable_stdio_usb(main 0)
