@@ -1,5 +1,7 @@
 #include "tusb.h"
 
+#include "vendor_request.h"
+
 // include desc_ms_os_20 variable, VENDOR_REQUEST_WEBUSB, VENDOR_REQUEST_MICROSOFT constants
 #include "usb_descriptors.h"
 
@@ -53,6 +55,16 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                 memcpy(&total_len, desc_ms_os_20 + 8, 2);
 
                 return tud_control_xfer(rhport, request, (void *)(uintptr_t)desc_ms_os_20, total_len);
+            }
+            else
+            {
+                return false;
+            }
+
+        case VENDOR_REQUEST_CUSTOM:
+            if (request->wIndex == 3) // Vendor specific endpoint (Available to claim using WebUSB)
+            {
+                return handle_custom_vendor_req(rhport, stage, request);
             }
             else
             {

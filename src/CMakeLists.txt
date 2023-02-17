@@ -35,6 +35,7 @@ target_include_directories(main PRIVATE
 target_sources(main PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/main.c
     ${CMAKE_CURRENT_LIST_DIR}/usb/tasks.c
+    ${CMAKE_CURRENT_LIST_DIR}/usb/vendor_request.c
     # TinyUSB functions not picked up unless we include it here (tud_vendor_control_xfer_cb)
     ${CMAKE_CURRENT_LIST_DIR}/usb/webusb.c
     ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
