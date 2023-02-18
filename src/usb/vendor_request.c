@@ -1,5 +1,6 @@
 #include "vendor_request.h"
 
+#include "pico/unique_id.h"
 #include "tusb.h"
 
 #include "git.h"
@@ -35,6 +36,21 @@ bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_reques
         strcpy(build_info.sha1, sha);
         strcpy(build_info.date, date);
         return tud_control_xfer(rhport, request, (void *)(uintptr_t)&build_info, build_info.bLength);
+    }
+    case CUSTOM_REQUEST_BOARD_ID:
+    {
+        const pico_unique_board_id_t pico_board_id;
+        pico_get_unique_board_id(&pico_board_id); // pass a pointer to the struct
+
+        // Construct a req_build_info struct from the response
+        const req_board_id board_id = {
+            .bLength = 10, // 1, 1, 8
+            .bCode = CUSTOM_REQUEST_BOARD_ID,
+            //.bId = &pico_board_id.id,
+        };
+        memcpy(board_id.bId, pico_board_id.id, 8);
+
+        return tud_control_xfer(rhport, request, (void *)(uintptr_t)&board_id, board_id.bLength);
     }
     default:
         // Unknown value

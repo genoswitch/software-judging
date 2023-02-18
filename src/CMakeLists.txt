@@ -48,7 +48,7 @@ target_sources(main PUBLIC
 # pico_stdlib needed as FreeRTOS uses panic_unsupported
 # memory management: FreeRTOS-Kernel-Heap# required for pvPortMalloc
 # tinyusb_device tinyusb_board (https://github.com/raspberrypi/pico-examples/blob/master/usb/device/dev_hid_composite/CMakeLists.txt)
-target_link_libraries(main pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board cmake_git_version_tracking)
+target_link_libraries(main pico_stdlib pico_unique_id FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board cmake_git_version_tracking)
 
 # stdio only on UART (UART0 by default, pins 1 and 2)
 pico_enable_stdio_usb(main 0)
