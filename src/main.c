@@ -1,5 +1,7 @@
 // FreeRTOS
 #include "FreeRTOS.h"
+// FreeRTOS version macro (tskKERNEL_VERSION_NUMBER)
+#include "task.h"
 
 // Standard libraries
 #include <stdio.h>
@@ -11,28 +13,15 @@
 // USB FreeRTOS tasks
 #include "usb/tasks.h"
 
+// Source control information embedded at build-time
+#include "git.h"
+
 int main(void)
 {
     // Setup hardware (init stdio, etc.)
     prvSetupHardware();
 
-    // Determine which RTOS type we are running
-    const char *rtos_name;
-#if (portSUPPORT_SMP == 1)
-    rtos_name = "FreeRTOS SMP";
-#else
-    rtos_name = "FreeRTOS";
-#endif
-
-#if (portSUPPORT_SMP == 1) && (configNUM_CORES == 2)
-    printf("%s on both cores:\n", rtos_name);
-#endif
-
-#if (mainRUN_ON_CORE == 1)
-    printf("%s on core 1:\n", rtos_name);
-#else
-    printf("%s on core 0:\n", rtos_name);
-#endif
+    prvSerialDisplaySystemInfo();
 
     // Init some tasks!
 
@@ -47,4 +36,37 @@ int main(void)
 static void prvSetupHardware(void)
 {
     stdio_init_all(); // init the things uwu
+}
+
+// Display hardware and firmware information over standard output.
+void prvSerialDisplaySystemInfo(void)
+{
+    // Determine which RTOS type we are running
+    const char *rtos_name;
+#if (portSUPPORT_SMP == 1)
+    rtos_name = "FreeRTOS SMP";
+#else
+    rtos_name = "FreeRTOS";
+#endif
+    printf("%s, %s\n", rtos_name, tskKERNEL_VERSION_NUMBER);
+
+#if (portSUPPORT_SMP == 1) && (configNUM_CORES == 2)
+    printf("Running on both cores\n");
+#endif
+
+#if (mainRUN_ON_CORE == 1)
+    printf("Kernel running on core 1\n");
+#else
+    printf("Kernel running on core 0\n");
+#endif
+
+    if (git_IsPopulated())
+    {
+        printf("Commit: %s\n", git_CommitSHA1());
+        printf("Commit date: %s\n", git_CommitDate());
+    }
+    else
+    {
+        printf("This image was built without source control.\n");
+    }
 }
