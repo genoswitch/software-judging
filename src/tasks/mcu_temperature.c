@@ -1,12 +1,15 @@
 // FreeRTOS core and task libraries
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
 #include "mcu_temperature.h"
+
+#include "bulk.h"
 
 #define MCU_TEMP_STACK_SIZE configMINIMAL_STACK_SIZE
 
@@ -26,6 +29,7 @@ void pvRegisterMcuTempTask(void)
 
 void mcu_temp_task(void *param)
 {
+    struct AMessage *pxPointerToxMessage;
     (void)param;
 
     adc_init();
@@ -36,6 +40,16 @@ void mcu_temp_task(void *param)
 
     /* Block for 500ms. */
     const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
+
+    vTaskDelay(xDelay);
+
+    struct AMessage msg;
+    msg.ucMessageID = 0x0f;
+
+    pxPointerToxMessage = &msg;
+
+    QueueHandle_t queue = getQueueHandle();
+    xQueueSend(queue, (void *)&pxPointerToxMessage, (TickType_t)0);
 
     while (1)
     {

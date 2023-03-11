@@ -13,6 +13,9 @@
 // USB FreeRTOS tasks
 #include "usb/tasks.h"
 
+#include "tasks/bulk.h"
+#include "tasks/mcu_temperature.h"
+
 // Source control information embedded at build-time
 #include "git.h"
 
@@ -23,9 +26,12 @@ int main(void)
 
     prvSerialDisplaySystemInfo();
 
+    pvCreateBulkQueue();
+
     // Init some tasks!
 
     pvCreateUsbTasks();
+    pvRegisterMcuTempTask();
 
     // TinyUSB demos call this after creating tasks.
     vTaskStartScheduler();
