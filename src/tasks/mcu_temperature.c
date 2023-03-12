@@ -11,6 +11,8 @@
 
 #include "bulk.h"
 
+#include "../config.h"
+
 #define MCU_TEMP_STACK_SIZE configMINIMAL_STACK_SIZE
 
 #if configSUPPORT_STATIC_ALLOCATION
@@ -27,37 +29,61 @@ void pvRegisterMcuTempTask(void)
 #endif
 }
 
+#if configLOG_TEMP_STDOUT
+const float conversion_factor = 3.3f / (1 << 12);
+#endif
+
 void mcu_temp_task(void *param)
 {
-    struct AMessage *pxPointerToxMessage;
+    struct ADCTempMessage *pxPointerToxMessage;
     (void)param;
 
     adc_init();
     adc_set_temp_sensor_enabled(true);
     adc_select_input(4);
 
-    const float conversion_factor = 3.3f / (1 << 12);
-
     /* Block for 500ms. */
     const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
 
     vTaskDelay(xDelay);
 
-    struct AMessage msg;
-    msg.ucMessageID = 0x0f;
-
-    pxPointerToxMessage = &msg;
-
-    QueueHandle_t queue = getQueueHandle();
-    xQueueSend(queue, (void *)&pxPointerToxMessage, (TickType_t)0);
-
     while (1)
     {
 
+        // Get a reading from the ADC.
         uint16_t raw = adc_read();
+
+#if configLOG_TEMP_STDOUT
+        // A float has more than enough resolution for this.
+        // Convert the adc value to a voltage
         float result = raw * conversion_factor;
+        // Determine the temperature using a known value at a known temperature
+        // Src: RP2040 Datasheet, Section 4.9.5 'Temperature Sensor'
         float temp = 27 - (result - 0.706) / 0.001721;
-        printf("Temp = %f C\n", temp);
+        // Display the temperature over stdout
+        printf("MCU Temp: %f C\n", temp);
+#endif
+
+        // Construct a ADCTempMessage.
+        struct ADCTempMessage msg;
+        // Insert the magic byte informing the reciever that this is a valid packet.
+        msg.bMagic = MAGIC_BYTE;
+        // Set the length (used by usbd - sends bLength bytes)
+        msg.bLength = 8;
+        // Set the packet code.
+        msg.bCode = 0x00;
+        // Set the temp value
+        msg.temp_adc = raw;
+        // Create a pointer to the message
+        pxPointerToxMessage = &msg;
+        // Get the queue handle
+        QueueHandle_t queue = getQueueHandle();
+        // Add a pointer to the memory address of the message to the queue.
+        // This allows us to add arbitary length datatypes to the queue.
+        // Use a tickType of 0 to not block until a space if available.
+        // TODO: Add handling for when the queue is full, although may be unlikely to happen.
+        xQueueSend(queue, (void *)&pxPointerToxMessage, (TickType_t)0);
+        // Delay (suspend) this task. Does not use CPU time.
         vTaskDelay(xDelay);
     }
 }

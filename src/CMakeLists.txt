@@ -44,6 +44,7 @@ target_sources(main PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/bulk.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/mcu_temperature.c
+    ${CMAKE_CURRENT_LIST_DIR}/config.h
     )
 
 # Link to libraries  (after sdk init)
