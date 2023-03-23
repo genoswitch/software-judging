@@ -10,4 +10,15 @@ project(${PROJECT} C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+# Set the flashloader submodule path and define the 'set_linker_script' function
+include(flashloader-helper.cmake)
+
+# Main application, including TinyUSB and Pico SDK
+# TODO: move pico SDK out of that, put it here?
 include(main.cmake)
+
+# Flashloader scripts
+include(flashloader.cmake)
+
+# Scripts to combine the flashloader and main app together into a single bootable uf2.
+include(combined.cmake)
