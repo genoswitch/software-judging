@@ -13,3 +13,7 @@
 	path = lib/cmake-git-version-tracking
 	url = https://github.com/andrew-hardin/cmake-git-version-tracking
 	branch = master
+[submodule "pico-flashloader"]
+	path = lib/pico-flashloader
+	url = https://github.com/rhulme/pico-flashloader
+	branch = master
