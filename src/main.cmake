@@ -52,3 +52,8 @@ pico_enable_stdio_uart(main 1)
 
 # Create extra files, such as .uf2
 pico_add_extra_outputs(main)
+
+# Based on lib/pico-flashloader/CMakeLists.txt#L86
+# Use a separate linker script for the application to make sure it is built
+# to run at the right location (after the flashloader).
+set_linker_script(main memmap_application.ld)
