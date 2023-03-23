@@ -55,6 +55,9 @@ pico_enable_stdio_uart(${MAIN} 1)
 # Create extra files, such as .uf2
 pico_add_extra_outputs(${MAIN})
 
+# Set main_uf2 var to we know the file to combine (see combined.cmake)
+set(MAIN_UF2 ${CMAKE_CURRENT_BINARY_DIR}/${MAIN}.uf2)
+
 # Based on lib/pico-flashloader/CMakeLists.txt#L86
 # Use a separate linker script for the application to make sure it is built
 # to run at the right location (after the flashloader).
