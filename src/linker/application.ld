@@ -51,7 +51,15 @@ SECTIONS
         __flash_binary_start = .;
     } > FLASH
 
-    /** (change): no boot2 **/
+    .boot2 : {
+        __boot2_start__ = .;
+        KEEP (*(.boot2))
+        __boot2_end__ = .;
+    } > FLASH
+
+    ASSERT(__boot2_end__ - __boot2_start__ == 256,
+        "ERROR: Pico second stage bootloader must be 256 bytes in size")
+
 
     .text : {
         __logical_binary_start = .;
