@@ -2,7 +2,8 @@
 
 set(APP_BIN ${CMAKE_CURRENT_BINARY_DIR}/main.bin)
 set(COMBINED combined_new)
-add_custom_target(${COMBINED} ALL)
+add_executable(${COMBINED} linker/null.c)
+target_link_libraries(${COMBINED} pico_stdlib) # annoying hh
 add_dependencies(${COMBINED} main pico-flashloader)
 add_custom_command(TARGET ${COMBINED} DEPENDS ${APP_BIN}
 	COMMAND ${CMAKE_OBJCOPY}
