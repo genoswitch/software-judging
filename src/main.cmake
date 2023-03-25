@@ -1,12 +1,9 @@
-set(PICO_SDK_PATH ../lib/pico-sdk)
 set(FREERTOS_KERNEL_PATH ../lib/freertos-smp)
-set(PICO_TINYUSB_PATH ${CMAKE_CURRENT_LIST_DIR}/../lib/tinyusb)
 
 # 'Subproject' name
 set (MAIN main)
 
-# Pull in SDK (must be before project)
-include(pico_sdk_import.cmake)
+# Pico SDK is pulled in in the root CMakeLists.txt file.
 
 # Pull in FreeRTOS
 include(FreeRTOS_Kernel_import.cmake)
