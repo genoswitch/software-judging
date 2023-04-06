@@ -25,7 +25,7 @@ target_sources(${FLASHLOADER} PUBLIC
         pico_divider
         )
 
-pico_add_uf2_output(${FLASHLOADER})
+pico_add_bin_output(${FLASHLOADER})
 pico_set_program_name(${FLASHLOADER} ${FLASHLOADER})
 target_compile_options(${FLASHLOADER} PRIVATE -Wall -Wextra -Wno-ignored-qualifiers -Os)
 
