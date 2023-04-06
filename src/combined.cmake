@@ -6,6 +6,14 @@ set(COMBINED combined_new)
 add_executable(${COMBINED} linker/null.c)
 target_link_libraries(${COMBINED} pico_stdlib) # annoying hh
 add_dependencies(${COMBINED} main pico-flashloader)
+
+# Add a dependency on the output (target) files from main.
+# This will trigger a rebuild of the combined target when the main project is changed.
+# Src: https://stackoverflow.com/a/69712159
+set_target_properties(${COMBINED} PROPERTIES
+    LINK_DEPENDS $<TARGET_FILE:main>
+)
+
 add_custom_command(TARGET ${COMBINED} DEPENDS ${FLASHLOADER_BIN}
 	COMMAND ${CMAKE_OBJCOPY}
 		--update-section .flashloader=${FLASHLOADER_BIN} ${APP_BIN} ${COMBINED}.elf
