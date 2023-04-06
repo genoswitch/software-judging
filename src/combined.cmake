@@ -15,15 +15,18 @@ set_target_properties(${COMBINED} PROPERTIES
 )
 
 add_custom_command(TARGET ${COMBINED} DEPENDS ${FLASHLOADER_BIN}
+    COMMENT "Injecting flashloader into main to create ${COMBINED}.elf"
 	COMMAND ${CMAKE_OBJCOPY}
 		--update-section .flashloader=${FLASHLOADER_BIN} ${APP_BIN} ${COMBINED}.elf
 )
 
 add_custom_command(TARGET ${COMBINED} POST_BUILD
+    COMMENT "Creating ${COMBINED}.bin"
     COMMAND ${CMAKE_OBJCOPY} -Obinary ${COMBINED}.elf ${COMBINED}.bin
 )
 
 add_custom_command(TARGET ${COMBINED} POST_BUILD 
+    COMMENT "Creating ${COMBINED}.hex"
     COMMAND ${CMAKE_OBJCOPY} -Oihex  ${COMBINED}.elf ${COMBINED}.hex
 )
 
@@ -45,6 +48,7 @@ endif()
 # 2. ELF2UF2 should now be available.
 if (ELF2UF2_FOUND)
     add_custom_command(TARGET ${COMBINED} POST_BUILD
+        COMMENT "Creating ${COMBINED}.uf2"
         COMMAND ELF2UF2 ${COMBINED}.elf ${COMBINED}.uf2
     )
 else()
