@@ -32,6 +32,7 @@ INCLUDE "defines.ld"
 MEMORY
 {
     /* (change): Change the start of flash to after the flashloader */
+    FLASH_STAGE3(rx) : ORIGIN = 0x10000000, LENGTH = __LOADER_SIZE
     FLASH(rx) : ORIGIN = 0x10000000 + __LOADER_SIZE, LENGTH = 2048k - __LOADER_SIZE
     RAM(rwx) : ORIGIN =  0x20000000, LENGTH = 256k
     SCRATCH_X(rwx) : ORIGIN = 0x20040000, LENGTH = 4k
@@ -50,7 +51,7 @@ SECTIONS
     .flash_begin : {
         __flash_binary_start = .;
     } > FLASH
-
+    
     .boot2 : {
         __boot2_start__ = .;
         KEEP (*(.boot2))
@@ -60,6 +61,13 @@ SECTIONS
     ASSERT(__boot2_end__ - __boot2_start__ == 256,
         "ERROR: Pico second stage bootloader must be 256 bytes in size")
 
+
+    /* (change): put flashloader here */
+    .flashloader : {
+        . = ALIGN(4k);
+    __flashloader = .;
+    LONG(0)
+    } > FLASH_STAGE3
 
     .text : {
         __logical_binary_start = .;

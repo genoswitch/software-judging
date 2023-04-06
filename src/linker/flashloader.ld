@@ -35,8 +35,6 @@ MEMORY
        This will include boot2, as well as the flashloader bin.
      */
     FLASH(rx) : ORIGIN = 0x10000000, LENGTH = __LOADER_SIZE
-    /* (change): Define a memory region for the main application, after the flashloader */
-    FLASH_APP(rx) : ORIGIN = 0x10000000 + __LOADER_SIZE, LENGTH = 2048k - __LOADER_SIZE
     RAM(rwx) : ORIGIN =  0x20000000, LENGTH = 256k
     SCRATCH_X(rwx) : ORIGIN = 0x20040000, LENGTH = 4k
     SCRATCH_Y(rwx) : ORIGIN = 0x20041000, LENGTH = 4k
@@ -63,13 +61,6 @@ SECTIONS
 
     ASSERT(__boot2_end__ - __boot2_start__ == 256,
         "ERROR: Pico second stage bootloader must be 256 bytes in size")
-
-    /** (change): Create an application section. This will be replaced with the app binary **/
-    .app : {
-        . = ALIGN(4k);
-    __app = .;
-    LONG(0)
-    } > FLASH_APP
 
     /* The second stage will always enter the image at the start of .text.
        The debugger will use the ELF entry point, which is the _entry_point
