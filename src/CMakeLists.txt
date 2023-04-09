@@ -25,22 +25,10 @@ include(linker/helper.cmake)
 # Main application
 include(core/main.cmake)
 
-# Flashloader scripts
-include(flashloader/flashloader.cmake)
+# Core+Flashloader build target
+include(flashloader/init.cmake)
 
-# Scripts to combine the flashloader and main app together into a single bootable uf2.
-include(flashloader/combined.cmake)
-
-
-
-add_executable(main core/main.c)
-target_link_libraries(main ${MAIN})
-# Based on lib/pico-flashloader/CMakeLists.txt#L86
-# Use a separate linker script for the application to make sure it is built
-# to run at the right location (after the flashloader).
-#set_linker_script(${MAIN} application.ld)
-set_linker_script(main flashloader/application.ld)
-
+# Core (standalone) build target
 add_executable(main_standalone core/main.c)
 target_link_libraries(main_standalone ${MAIN})
 set_linker_script(main_standalone application-standalone.ld)

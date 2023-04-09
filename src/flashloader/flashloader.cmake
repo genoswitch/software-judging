@@ -4,7 +4,7 @@
 set (FLASHLOADER_MODULE_PATH ../lib/pico-flashloader)
 
 # 'Subproject' name
-set(FLASHLOADER pico-flashloader)
+set(FLASHLOADER intermediate_pico-flashloader)
 
 add_executable(${FLASHLOADER})
 
