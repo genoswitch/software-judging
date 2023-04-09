@@ -3,7 +3,7 @@
 #include "task.h"
 #include "queue.h"
 
-#include <stdio.h>
+#include "pico/stdio.h"
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 

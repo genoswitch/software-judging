@@ -4,7 +4,7 @@
 #include "task.h"
 
 // Standard libraries
-#include <stdio.h>
+#include "pico/stdio.h"
 #include "pico/stdlib.h"
 
 // Accompanying header file

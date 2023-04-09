@@ -1,10 +1,10 @@
-#include "feature_set.h"
-
 // malloc
-#include <stdlib.h>
+#include "pico/malloc.h"
 
 // memset
-#include <string.h>
+#include "pico/mem_ops.h"
+
+#include "feature_set.h"
 
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 

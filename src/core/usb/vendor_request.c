@@ -1,3 +1,8 @@
+// malloc, free (multi-core safe!)
+#include "pico/malloc.h"
+// memset, memcpy
+#include "pico/mem_ops.h"
+
 #include "vendor_request.h"
 
 #include "pico/unique_id.h"
@@ -6,9 +11,6 @@
 #include "git.h"
 
 #include "../feature_set.h"
-
-// free()
-#include <stdlib.h>
 
 const req_version version = {
     .bLength = 3,

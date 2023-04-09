@@ -7,7 +7,7 @@
 #include "tusb.h"
 
 // Pico stdio and standard lib
-#include <stdio.h>
+#include "pico/stdio.h"
 #include "pico/stdlib.h"
 
 // Accompanying header file
