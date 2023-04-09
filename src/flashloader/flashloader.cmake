@@ -1,3 +1,5 @@
+# CMake script to build pico-flashloader (see lib/pico-flashloader)
+
 # Submodule path set by flashloader-helper.
 set (FLASHLOADER_MODULE_PATH ../lib/pico-flashloader)
 

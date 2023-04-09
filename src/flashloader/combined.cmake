@@ -3,7 +3,7 @@
 set(APP_BIN ${CMAKE_CURRENT_BINARY_DIR}/main.elf)
 set(FLASHLOADER_BIN ${CMAKE_CURRENT_BINARY_DIR}/pico-flashloader.bin)
 set(COMBINED combined_new)
-add_executable(${COMBINED} linker/null.c)
+add_executable(${COMBINED} ${CMAKE_CURRENT_LIST_DIR}/null.c)
 target_link_libraries(${COMBINED} pico_stdlib) # annoying hh
 add_dependencies(${COMBINED} main pico-flashloader)
 
