@@ -36,5 +36,3 @@ target_compile_options(${FLASHLOADER} PRIVATE -Wall -Wextra -Wno-ignored-qualifi
 # to run at the right location and cannot overflow into the applications's
 # address space
 set_linker_script(${FLASHLOADER} flashloader/flashloader.ld)
-
-set(FLASHLOADER_UF2 ${CMAKE_CURRENT_BINARY_DIR}/${FLASHLOADER}.uf2)
