@@ -58,4 +58,4 @@ set(MAIN_UF2 ${CMAKE_CURRENT_BINARY_DIR}/${MAIN}.uf2)
 # Based on lib/pico-flashloader/CMakeLists.txt#L86
 # Use a separate linker script for the application to make sure it is built
 # to run at the right location (after the flashloader).
-set_linker_script(${MAIN} application.ld)
+set_linker_script(${MAIN} flashloader/application.ld)
