@@ -26,10 +26,10 @@ include(linker/helper.cmake)
 include(core/main.cmake)
 
 # Flashloader scripts
-include(flashloader.cmake)
+include(flashloader/flashloader.cmake)
 
 # Scripts to combine the flashloader and main app together into a single bootable uf2.
-include(combined.cmake)
+include(flashloader/combined.cmake)
 
 
 
@@ -39,7 +39,7 @@ target_link_libraries(main ${MAIN})
 # Use a separate linker script for the application to make sure it is built
 # to run at the right location (after the flashloader).
 #set_linker_script(${MAIN} application.ld)
-set_linker_script(main application.ld)
+set_linker_script(main flashloader/application.ld)
 
 add_executable(main_standalone core/main.c)
 target_link_libraries(main_standalone ${MAIN})
