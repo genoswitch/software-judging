@@ -5,6 +5,11 @@
 
 #include "git.h"
 
+#include "../feature_set.h"
+
+// free()
+#include <stdlib.h>
+
 const req_version version = {
     .bLength = 3,
     .bCode = CUSTOM_REQUEST_VERSION,
@@ -51,6 +56,17 @@ bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_reques
         memcpy(board_id.bId, pico_board_id.id, 8);
 
         return tud_control_xfer(rhport, request, (void *)(uintptr_t)&board_id, board_id.bLength);
+    }
+    case CUSTOM_REQUEST_FEATURE_SET:
+    {
+        char *features = getFeatureSet();
+        const req_feature_set feature_set = {
+            .bLength = 3,
+            .bCode = CUSTOM_REQUEST_FEATURE_SET,
+            .bFeatures = *features,
+        };
+        free(features);
+        return tud_control_xfer(rhport, request, (void *)(uintptr_t)&feature_set, feature_set.bLength);
     }
     default:
         // Unknown value

@@ -13,7 +13,8 @@ enum
     CUSTOM_REQUEST_UNKNOWN,
     CUSTOM_REQUEST_VERSION,
     CUSTOM_REQUEST_BUILD_INFO,
-    CUSTOM_REQUEST_BOARD_ID
+    CUSTOM_REQUEST_BOARD_ID,
+    CUSTOM_REQUEST_FEATURE_SET
 };
 
 // b prefix for byte value
@@ -44,5 +45,12 @@ typedef struct TU_ATTR_PACKED
     uint8_t bCode;
     uint8_t bId[8]
 } req_board_id;
+
+typedef struct TU_ATTR_PACKED
+{
+    uint8_t bLength;
+    uint8_t bCode;
+    char bFeatures[1];
+} req_feature_set;
 
 bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_request_t const *request);
