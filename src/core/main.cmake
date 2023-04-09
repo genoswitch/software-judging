@@ -1,7 +1,13 @@
 set(FREERTOS_KERNEL_PATH ../lib/freertos-smp)
 
 # 'Subproject' name
-set (MAIN main)
+set (MAIN core)
+
+# Define this subproject as a library.
+# This allows us to create various executable targets
+# (for example, with and without the stage3 flashloader)
+# by linking against this library.
+add_library(${MAIN})
 
 # Pico SDK is pulled in in the root CMakeLists.txt file.
 
@@ -16,17 +22,15 @@ add_subdirectory(../lib/cmake-git-version-tracking git) # copy/compile to "git" 
 pico_sdk_init()
 
 
-# Add executable targets
-add_executable(${MAIN} main.c)
-
-
 # RTOS config "FreeRTOSConfig.h"
-target_include_directories(${MAIN} PRIVATE 
+# These sources should be PUBLIC so dependents linking against this library inherit these.
+target_include_directories(${MAIN} PUBLIC 
     ${CMAKE_CURRENT_LIST_DIR}/rtos-config/
     ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/
 
 )
 
+# These sources should be PUBLIC so dependents linking against this library inherit these.
 target_sources(${MAIN} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/main.c
     ${CMAKE_CURRENT_LIST_DIR}/usb/tasks.c
@@ -48,14 +52,3 @@ target_link_libraries(${MAIN} pico_stdlib hardware_adc pico_unique_id FreeRTOS-K
 # stdio only on UART (UART0 by default, pins 1 and 2)
 pico_enable_stdio_usb(${MAIN} 0)
 pico_enable_stdio_uart(${MAIN} 1)
-
-# Create extra files, such as .uf2
-pico_add_extra_outputs(${MAIN})
-
-# Set main_uf2 var to we know the file to combine (see combined.cmake)
-set(MAIN_UF2 ${CMAKE_CURRENT_BINARY_DIR}/${MAIN}.uf2)
-
-# Based on lib/pico-flashloader/CMakeLists.txt#L86
-# Use a separate linker script for the application to make sure it is built
-# to run at the right location (after the flashloader).
-set_linker_script(${MAIN} flashloader/application.ld)
