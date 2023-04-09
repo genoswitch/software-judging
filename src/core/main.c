@@ -19,10 +19,19 @@
 // Source control information embedded at build-time
 #include "git.h"
 
+extern void *__BUILD_INCLUDES_FLASHLOADER;
+
 int main(void)
 {
     // Setup hardware (init stdio, etc.)
     prvSetupHardware();
+#ifdef INCLUDES_FLASHLOADER
+    printf("INCLUDES: Flashloader support!\n");
+#endif
+
+    const int has_flashloader = (int)&__BUILD_INCLUDES_FLASHLOADER;
+
+    printf("FLASHLOADER: %i\n", has_flashloader);
 
     prvSerialDisplaySystemInfo();
 
