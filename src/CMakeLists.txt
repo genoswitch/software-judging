@@ -23,7 +23,7 @@ set(CMAKE_CXX_STANDARD 17)
 include(linker/helper.cmake)
 
 # Main application
-include(main.cmake)
+include(core/main.cmake)
 
 # Flashloader scripts
 include(flashloader.cmake)
