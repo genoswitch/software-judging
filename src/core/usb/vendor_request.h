@@ -43,7 +43,7 @@ typedef struct TU_ATTR_PACKED
 {
     uint8_t bLength;
     uint8_t bCode;
-    uint8_t bId[8]
+    uint8_t bId[8];
 } req_board_id;
 
 typedef struct TU_ATTR_PACKED
