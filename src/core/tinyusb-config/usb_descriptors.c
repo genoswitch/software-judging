@@ -179,6 +179,43 @@ https://developers.google.com/web/fundamentals/native-hardware/build-for-webusb/
 (Section Microsoft OS compatibility descriptors)
 */
 
+//--------------------------------------------------------------------+
+// BOS Descriptor: Size breakdown
+//--------------------------------------------------------------------+
+
+// A descriptor with one interface has the following components with their sizes indicated.
+// 178	Header
+//      10	(Header definition)
+//      168	Configuration subset header
+//		    8	(Header Definittion)
+//		    160	Function Subset Header
+//			    8	(Header Definittion)
+//			    20	MS OS 2.0 Compatible ID descriptor
+//			    132	MS OS 2.0 registry property desc
+// Or, in hexadecimal:
+// 0xB2	Header
+//      0x0A	(Header definition)
+//      0xA8	Configuration subset header
+//          0x08	(Header Definittion)
+//          0xA0	Function Subset Header
+//			    0x08	(Header Definittion)
+//			    0x14	MS OS 2.0 Compatible ID descriptor
+//			    0x84	MS OS 2.0 registry property desc
+// For the sake of shorter defines, let's abbreviate "MS_OS_20_DESC_[xyz]_LEN" to "MO2DL_[xyz]".
+// Defines for the sizes of different parts of the descriptor.
+#define MO2DL_REGISTRY_PROPERTY_DESCRIPTOR 0x84
+#define MO2DL_COMPATIBLE_ID_DESCRIPTOR 0x14
+// This define includes the header size itself as well as the size of it's child components
+#define MO2DL_FUNCTION_SUBSET_HEADER (0x08 + MO2DL_COMPATIBLE_ID_DESCRIPTOR + MO2DL_REGISTRY_PROPERTY_DESCRIPTOR)
+// The following defines DO NOT include the sizes of their components as multiple components are needed for our use case.
+// I have prefixed these defines with "EXCL" for "exclusive of" the component sizes.
+#define MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER 0x08 // You will need to add the correct amount of MO2DL_FUNCTION_SUBSET_HEADER.
+#define MO2DL_EXCL_HEADER 0x0A                      // You will need to add the correct amount of both MO2DL_FUNCTION_SUBSET_HEADER and MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER.
+
+//--------------------------------------------------------------------+
+// BOS Descriptor: Configuration
+//--------------------------------------------------------------------+
+
 #define BOS_TOTAL_LEN (TUD_BOS_DESC_LEN + TUD_BOS_WEBUSB_DESC_LEN + TUD_BOS_MICROSOFT_OS_DESC_LEN)
 
 #define MS_OS_20_DESC_LEN 0xB2
