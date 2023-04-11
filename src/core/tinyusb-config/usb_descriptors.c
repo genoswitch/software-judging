@@ -216,9 +216,24 @@ https://developers.google.com/web/fundamentals/native-hardware/build-for-webusb/
 // BOS Descriptor: Configuration
 //--------------------------------------------------------------------+
 
-#define BOS_TOTAL_LEN (TUD_BOS_DESC_LEN + TUD_BOS_WEBUSB_DESC_LEN + TUD_BOS_MICROSOFT_OS_DESC_LEN)
+#ifndef INCLUDES_FLASHLOADER
+// Standalone configuration
+#define MS_OS_20_DESC_LEN (                                                                                     \
+    MO2DL_EXCL_HEADER /* Microsoft OS 2.0 descriptor header (not including child components) */ +               \
+    MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER /* Configuration subset header (not including child components) */ + \
+    MO2DL_FUNCTION_SUBSET_HEADER /* Function subset header + contents [including child components, only one needed for vendor-specific interface] */)
+#else
+// Flashloader configuration
+#define MS_OS_20_DESC_LEN (                                                                                     \
+    MO2DL_EXCL_HEADER /* Microsoft OS 2.0 descriptor header (not including child components) */ +               \
+    MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER /* Configuration subset header (not including child components) */ + \
+    MO2DL_FUNCTION_SUBSET_HEADER /* Function subset header + contents (vendor specific interface) */ +          \
+    MO2DL_FUNCTION_SUBSET_HEADER /* Function subset header + contents (DFU interface) */                        \
+)
 
-#define MS_OS_20_DESC_LEN 0xB2
+#endif
+
+#define BOS_TOTAL_LEN (TUD_BOS_DESC_LEN + TUD_BOS_WEBUSB_DESC_LEN + TUD_BOS_MICROSOFT_OS_DESC_LEN)
 
 // BOS Descriptor is required for webUSB
 uint8_t const desc_bos[] =
