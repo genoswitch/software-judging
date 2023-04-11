@@ -217,12 +217,18 @@ https://developers.google.com/web/fundamentals/native-hardware/build-for-webusb/
 //--------------------------------------------------------------------+
 
 #ifndef INCLUDES_FLASHLOADER
+
+#define CONFIGURATION_SUBSET_HEADER_SIZE (MO2DL_FUNCTION_SUBSET_HEADER + MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER)
+
 // Standalone configuration
 #define MS_OS_20_DESC_LEN (                                                                                     \
     MO2DL_EXCL_HEADER /* Microsoft OS 2.0 descriptor header (not including child components) */ +               \
     MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER /* Configuration subset header (not including child components) */ + \
     MO2DL_FUNCTION_SUBSET_HEADER /* Function subset header + contents [including child components, only one needed for vendor-specific interface] */)
 #else
+
+#define CONFIGURATION_SUBSET_HEADER_SIZE (MO2DL_FUNCTION_SUBSET_HEADER + MO2DL_FUNCTION_SUBSET_HEADER + MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER)
+
 // Flashloader configuration
 #define MS_OS_20_DESC_LEN (                                                                                     \
     MO2DL_EXCL_HEADER /* Microsoft OS 2.0 descriptor header (not including child components) */ +               \
@@ -258,7 +264,7 @@ uint8_t const desc_ms_os_20[] =
         U16_TO_U8S_LE(0x000A), U16_TO_U8S_LE(MS_OS_20_SET_HEADER_DESCRIPTOR), U32_TO_U8S_LE(0x06030000), U16_TO_U8S_LE(MS_OS_20_DESC_LEN),
 
         // Configuration subset header: length, type, configuration index, reserved, configuration total length
-        U16_TO_U8S_LE(0x0008), U16_TO_U8S_LE(MS_OS_20_SUBSET_HEADER_CONFIGURATION), 0, 0, U16_TO_U8S_LE(MO2DL_FUNCTION_SUBSET_HEADER + MO2DL_EXCL_CONFIGURATION_SUBSET_HEADER),
+        U16_TO_U8S_LE(0x0008), U16_TO_U8S_LE(MS_OS_20_SUBSET_HEADER_CONFIGURATION), 0, 0, U16_TO_U8S_LE(CONFIGURATION_SUBSET_HEADER_SIZE),
 
         // Function Subset header: length, type, first interface, reserved, subset length
         U16_TO_U8S_LE(0x0008), U16_TO_U8S_LE(MS_OS_20_SUBSET_HEADER_FUNCTION), ITF_NUM_VENDOR, 0, U16_TO_U8S_LE(MO2DL_FUNCTION_SUBSET_HEADER),
