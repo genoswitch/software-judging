@@ -2,9 +2,14 @@ set(MAIN_FL_LINKED intermediate_main_flashloader_linked)
 
 add_executable(${MAIN_FL_LINKED} core/main.c)
 
-target_link_libraries(${MAIN_FL_LINKED} ${MAIN})
+target_link_libraries(${MAIN_FL_LINKED} ${MAIN} hardware_dma)
 
 target_compile_definitions(${MAIN_FL_LINKED} PRIVATE INCLUDES_FLASHLOADER)
+
+target_sources(${MAIN_FL_LINKED} PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/util.c
+    ${CMAKE_CURRENT_LIST_DIR}/flashloader.c
+)
 
 # Based on lib/pico-flashloader/CMakeLists.txt#L86
 # Use a separate linker script for the application to make sure it is built

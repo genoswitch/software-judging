@@ -21,6 +21,10 @@
 
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 
+#ifdef INCLUDES_FLASHLOADER
+#include "../flashloader/flashloader.h"
+#endif
+
 int main(void)
 {
     // Setup hardware (init stdio, etc.)
@@ -41,6 +45,10 @@ int main(void)
 
     pvCreateUsbTasks();
     pvRegisterMcuTempTask();
+
+#ifdef INCLUDES_FLASHLOADER
+    pvRegisterFlashloaderTask();
+#endif
 
     // TinyUSB demos call this after creating tasks.
     vTaskStartScheduler();
