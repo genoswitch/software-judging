@@ -52,6 +52,10 @@ jobs:
     needs: [build]
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    # https://github.com/peaceiris/actions-gh-pages/tree/61cf177907e9ac9e79986e64f4e667fbfa975c04#:~:text=If%20the%20action%20fails%20to%20push%20the%20commit%20or%20tag%20with%20the%20following%20error%3A
+    # GitHub gives a 403, explicitly allow write permissions.
+    permissions:
+      contents: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
