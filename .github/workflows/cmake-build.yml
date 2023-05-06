@@ -1,34 +1,33 @@
-name: CMake Build
+name: CMake
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# Run on any push or PR.
+on: ["push", "pull_request"]
+# Deploy job will only run on the "main" branch.
 
 jobs:
   build:
+    name: Build
     strategy:
       matrix:
         # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
         build-type: [Release, Debug, RelWithDebInfo, MinSizeRel]
     
 
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    # CMake is platform-agnostic.
     runs-on: ubuntu-latest
 
     steps:
     - name: "(pkgs): Update package lists"
       run: sudo apt-get update
+
     - name: "(pkgs): Upgrade packages"
       run: sudo apt-get upgrade -y
+
     - name: "(pkgs): Install toolchain"
       run: sudo apt-get install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib python3 git
 
-
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
       with:
         # Checkout submodules (non-recursive)
         submodules: 'true'
@@ -47,8 +46,9 @@ jobs:
         name: ${{ matrix.build-type }}
         path: |
           build/main_*.*
-  
+
   deploy:
+    name: Deploy Artifacts
     needs: [build]
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
