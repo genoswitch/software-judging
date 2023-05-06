@@ -35,7 +35,7 @@ jobs:
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory.
-      run: cmake -B ${{github.workspace}}/build -S ${{github.workspace}}/src
+      run: cmake -B ${{github.workspace}}/build -S ${{github.workspace}}/src -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
 
     - name: Build
       # Build the program with the given configuration
