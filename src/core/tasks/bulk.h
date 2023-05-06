@@ -8,7 +8,9 @@ QueueHandle_t getQueueHandle(void);
 
 #define MAGIC_BYTE 0xdd24433b // Bear in mind this is little endian so will show up backwards!
 
-struct BaseMessage
+// Defined in header file, make it static so it is only defined once!
+// https://stackoverflow.com/a/17764724
+static struct BaseMessage
 {
     uint32_t bMagic;
     uint8_t bLength;

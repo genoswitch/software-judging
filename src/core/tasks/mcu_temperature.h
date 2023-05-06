@@ -1,7 +1,9 @@
 void pvRegisterMcuTempTask(void);
 void mcu_temp_task(void *param);
 
-struct ADCTempMessage // Len: 8
+// Defined in header file, make it static so it is only defined once!
+// https://stackoverflow.com/a/17764724
+static struct ADCTempMessage // Len: 8
 {
     uint32_t bMagic;   // 4 bytes
     uint8_t bLength;   // 1 byte
