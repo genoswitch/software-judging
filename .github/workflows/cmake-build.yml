@@ -47,31 +47,45 @@ jobs:
         name: ${{ matrix.build-type }}
         path: |
           build/main_*.*
-    
-    - name: "(deploy/main): Create variable with lowercase build type"
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: echo "BUILD_TYPE_LOWERCASE=$(echo "${{ matrix.build-type }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-    
-    - name: "(deploy/main): Read out build type variable"
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: echo "Found build variable '$BUILD_TYPE_LOWERCASE'"
-    
-    - name: "(deploy/main): Create directory structure for GitHub Pages deployment"
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: mkdir -p pages-deploy/$BUILD_TYPE_LOWERCASE && cp build/main_*.* pages-deploy/$BUILD_TYPE_LOWERCASE
+  
+  deploy:
+    needs: [build]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        # Checkout submodules (non-recursive)
+        submodules: 'true'
 
-    - name: "(deploy/main): Create sha.txt file"
-      if: ${{ github.ref == 'refs/heads/main' }}
-      run: git rev-parse HEAD > pages-deploy/$BUILD_TYPE_LOWERCASE/sha.txt
+    - name: "(pkgs): Update package lists"
+      run: sudo apt-get update
 
-    - name: "(deploy/main): Upload Build Artifacts to GitHub Pages"
-      if: ${{ github.ref == 'refs/heads/main' }}
+    - name: "(pkgs): Install rename"
+      run: sudo apt-get install -y rename
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+
+    - name: Rename artifact folders to lowercase
+      run: rename 'y/A-Z/a-z/' artifacts/*
+    
+    - name: Create sha.txt file in artifact folder
+      run: git rev-parse HEAD > artifacts/sha.txt
+
+    - name: Upload artifacts to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: pages-deploy/${{ env.BUILD_TYPE_LOWERCASE }}
-        destination_dir: builds/main/${{ env.BUILD_TYPE_LOWERCASE }}
+        publish_dir: artifacts
+        destination_dir: builds/main/
         keep_files: true
+        # Commit as github actions (noted on action README)
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
 
 #    - name: Test
 #      working-directory: ${{github.workspace}}/build
