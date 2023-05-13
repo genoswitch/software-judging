@@ -12,6 +12,10 @@
 
 #include "../feature_set.h"
 
+// pico build info: __flash_binary end value from the linker
+#include "pico/binary_info.h"
+extern char __flash_binary_end;
+
 const req_version version = {
     .bLength = 3,
     .bCode = CUSTOM_REQUEST_VERSION,
@@ -69,6 +73,15 @@ bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_reques
         };
         free(features);
         return tud_control_xfer(rhport, request, (void *)(uintptr_t)&feature_set, feature_set.bLength);
+    }
+    case CUSTOM_REQUEST_FLASH_BINARY_END:
+    {
+        const req_flash_binary_end flash_binary_end = {
+            .bLength = 6,
+            .bCode = CUSTOM_REQUEST_FLASH_BINARY_END,
+            .bEndAddress = (uint32_t)&__flash_binary_end,
+        };
+        return tud_control_xfer(rhport, request, (void *)(uintptr_t)&flash_binary_end, flash_binary_end.bLength);
     }
     default:
         // Unknown value

@@ -14,7 +14,8 @@ enum
     CUSTOM_REQUEST_VERSION,
     CUSTOM_REQUEST_BUILD_INFO,
     CUSTOM_REQUEST_BOARD_ID,
-    CUSTOM_REQUEST_FEATURE_SET
+    CUSTOM_REQUEST_FEATURE_SET,
+    CUSTOM_REQUEST_FLASH_BINARY_END
 };
 
 // b prefix for byte value
@@ -52,5 +53,15 @@ typedef struct TU_ATTR_PACKED
     uint8_t bCode;
     char bFeatures[1];
 } req_feature_set;
+
+typedef struct TU_ATTR_PACKED
+{
+    uint8_t bLength;
+    uint8_t bCode;
+    // The Cortex M0+ can access up to 4GB in it's memory map.
+    // To be safe, we will be using a uint32 (although unlikely we will need this many bytes)
+    // TODO: Pico // RP2040 memory map layout?
+    uint32_t bEndAddress;
+} req_flash_binary_end;
 
 bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_request_t const *request);
