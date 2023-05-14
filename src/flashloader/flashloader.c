@@ -1,6 +1,6 @@
 #include "flashloader.h"
 
-#include "util.c"
+#include "crc32.c"
 
 #include <stdio.h>
 

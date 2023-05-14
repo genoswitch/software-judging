@@ -7,7 +7,7 @@ target_link_libraries(${MAIN_FL_LINKED} ${MAIN} hardware_dma)
 target_compile_definitions(${MAIN_FL_LINKED} PRIVATE INCLUDES_FLASHLOADER)
 
 target_sources(${MAIN_FL_LINKED} PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/util.c
+    ${CMAKE_CURRENT_LIST_DIR}/crc32.c
     ${CMAKE_CURRENT_LIST_DIR}/flashloader.c
     ${CMAKE_CURRENT_LIST_DIR}/dfu.c
 )
