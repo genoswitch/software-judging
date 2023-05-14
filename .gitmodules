@@ -17,3 +17,6 @@
 	path = lib/pico-flashloader
 	url = https://github.com/rhulme/pico-flashloader
 	branch = master
+[submodule "lib/ringbuf"]
+	path = lib/ringbuf
+	url = https://github.com/genoswitch/c-ringbuf
