@@ -1,5 +1,11 @@
 #include "tusb.h"
 
+#include "ihex/record.h"
+
+#include "ringbuf.h"
+
+#include <string.h>
+
 // DFU Callbacks
 // Note that 'alt' is used as the partition number to allow for multiple partitions (FLASH/EEPROM/etc)
 // At the moment we only have one "partition".
@@ -25,6 +31,8 @@ uint32_t tud_dfu_get_timeout_cb(uint8_t alt, uint8_t state)
     return 0;
 }
 
+ringbuf_t rb1;
+
 // Called when we recieve a new block from the host.
 // (recieved DFU_DNLOAD (wLength>0) following by DFU_GETSTATUS (state=DFU_DNBUSY) requests)
 // This callback could be returned before flashing op is complete (async).
@@ -34,12 +42,38 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
     (void)alt;
     (void)block_num;
 
-    // printf("\r\nReceived Alt %u BlockNum %u of length %u\r\n", alt, wBlockNum, length);
-
-    for (uint16_t i = 0; i < length; i++)
+    if (block_num == 0)
     {
-        printf("%c", data[i]);
+        printf("Initialized new ringbuffer...\n");
+        rb1 = ringbuf_new(256 + 5);
     }
+
+    ringbuf_memcpy_into(rb1, data, length);
+
+    int match;
+    // 'thing' works, "thing" does not (returns size)
+    match = ringbuf_findchr(rb1, '\n', 0);
+    if (match != ringbuf_bytes_used(rb1))
+    {
+        printf("Found a match at index %i\n", match);
+
+        // Get a buffer of the right size (calloc to zero fill)
+        char *buffer = malloc(match + 1);
+
+        // Copy from tail up to and including the match index
+        // This increments the tail i think.
+        ringbuf_memcpy_from(buffer, rb1, match + 1);
+
+        ihexRecord rec;
+        processRecord(buffer, &rec);
+        printf("processed record with length %i\n", rec.count);
+
+        // re-run
+        // 'thing' works, "thing" does not (returns size)
+        match = ringbuf_findchr(rb1, '\n', 0);
+    }
+
+    printf("\nProcessed DFU packet: alt %u, blockNum %u, length %u\n", alt, block_num, length);
 
     // flashing op for download complete without error
     tud_dfu_finish_flashing(DFU_STATUS_OK);
