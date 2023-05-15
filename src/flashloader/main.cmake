@@ -1,7 +1,9 @@
 set(MAIN_FL_LINKED intermediate_main_flashloader_linked)
 
 set (RINGBUF_MODULE_PATH ../lib/ringbuf)
+set (FLASHLOADER_MODULE_PATH ../lib/pico-flashloader)
 include_directories(${RINGBUF_MODULE_PATH})
+include_directories(${FLASHLOADER_MODULE_PATH})
 
 add_executable(${MAIN_FL_LINKED} core/main.c)
 
@@ -15,8 +17,10 @@ target_sources(${MAIN_FL_LINKED} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/dfu.c
     ${CMAKE_CURRENT_LIST_DIR}/ihex/record.c
     ${CMAKE_CURRENT_LIST_DIR}/ihex/util.c
+    ${CMAKE_CURRENT_LIST_DIR}/ihex/process.c
     ${RINGBUF_MODULE_PATH}/ringbuf.c
     ${RINGBUF_MODULE_PATH}/ringbuf.h
+    ${FLASHLOADER_MODULE_PATH}/flashloader.h
 )
 
 # Based on lib/pico-flashloader/CMakeLists.txt#L86
