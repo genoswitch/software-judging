@@ -1,6 +1,7 @@
 #include "tusb.h"
 
 #include "ihex/record.h"
+#include "ihex/process.h"
 
 #include "ringbuf.h"
 
@@ -52,28 +53,46 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
 
     int match;
     // 'thing' works, "thing" does not (returns size)
-    match = ringbuf_findchr(rb1, '\n', 0);
+    match = ringbuf_findchr(rb1, ':', 0);
     if (match != ringbuf_bytes_used(rb1))
     {
-        printf("Found a match at index %i\n", match);
+        if (match == 0)
+        {
+            // First character is a :
+            // To avoid only doing head -> index (0)
+            // Lets search again starting from index 1.
+            match = ringbuf_findchr(rb1, ':', 1);
+            //__breakpoint();
+        }
+        // printf("Found a match at index %i\n", match);
 
         // Get a buffer of the right size (calloc to zero fill)
-        char *buffer = malloc(match + 1);
+        char *buffer = malloc(match);
 
         // Copy from tail up to and including the match index
         // This increments the tail i think.
-        ringbuf_memcpy_from(buffer, rb1, match + 1);
+        ringbuf_memcpy_from(buffer, rb1, match);
+        // head +17 (match)
+        //__breakpoint();
+
+        printf("CONTENTS: '%.*s'\n", match, buffer);
 
         ihexRecord rec;
-        parseRecord(buffer, &rec);
-        printf("processed record with length %i\n", rec.count);
+        int result = parseRecord(buffer, &rec);
+        if (result == 0)
+        {
+            __breakpoint();
+        }
+        free(buffer);
+        processRecord(&rec);
+        // printf("processed record with length %i\n", rec.count);
 
         // re-run
         // 'thing' works, "thing" does not (returns size)
         match = ringbuf_findchr(rb1, '\n', 0);
     }
 
-    printf("\nProcessed DFU packet: alt %u, blockNum %u, length %u\n", alt, block_num, length);
+    // printf("\nProcessed DFU packet: alt %u, blockNum %u, length %u\n", alt, block_num, length);
 
     // flashing op for download complete without error
     tud_dfu_finish_flashing(DFU_STATUS_OK);
