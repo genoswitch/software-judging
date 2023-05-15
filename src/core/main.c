@@ -22,7 +22,7 @@
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 
 #ifdef INCLUDES_FLASHLOADER
-#include "../flashloader/flashloader.h"
+#include "../flashloader/main.h"
 #endif
 
 int main(void)
