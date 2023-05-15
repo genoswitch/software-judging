@@ -15,7 +15,7 @@
 	branch = master
 [submodule "pico-flashloader"]
 	path = lib/pico-flashloader
-	url = https://github.com/rhulme/pico-flashloader
+	url = https://github.com/genoswitch/pico-flashloader
 	branch = master
 [submodule "lib/ringbuf"]
 	path = lib/ringbuf
