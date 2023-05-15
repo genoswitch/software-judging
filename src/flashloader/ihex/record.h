@@ -18,4 +18,4 @@ typedef struct
     uint8_t data[256]; // rhulme (max size 256bytes)
 } ihexRecord;
 
-int processRecord(const char *line, ihexRecord *record);
+int parseRecord(const char *line, ihexRecord *record);

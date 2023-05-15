@@ -65,7 +65,7 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         ringbuf_memcpy_from(buffer, rb1, match + 1);
 
         ihexRecord rec;
-        processRecord(buffer, &rec);
+        parseRecord(buffer, &rec);
         printf("processed record with length %i\n", rec.count);
 
         // re-run

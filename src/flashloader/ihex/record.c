@@ -7,7 +7,7 @@
 
 // Converts an Intel hex record in text form to a binary representation.
 // Returns non-zero if the text could be parsed successfully
-int processRecord(const char *line, ihexRecord *record)
+int parseRecord(const char *line, ihexRecord *record)
 {
     int success = 0;
     int offset = 0;
