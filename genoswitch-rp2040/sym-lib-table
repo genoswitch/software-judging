@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "MCU_RaspberryPi_Custom")(type "KiCad")(uri "../lib/MCU_RaspberryPi.kicad_sym")(options "")(descr ""))
+)
