@@ -29,6 +29,7 @@ void processRecord(ihexRecord *rec)
     switch (rec->type)
     {
     case IHEX_TYPE_DATA:
+        printf("ADDR: 0x%08x\n", getAddress(rec));
         // seems sketchy, seems to copy into the buffer underneath it?
         memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
         offset += rec->count;
@@ -44,7 +45,7 @@ void processRecord(ihexRecord *rec)
     // skip
     case IHEX_TYPE_EXT_LIN_ADDR:
         printf("EXT LINE\n");
-        printf("NEW ADDRESS: 0x%08x\n", rec->addr);
+        printf("NEW ADDRESS: 0x%08x\n", rec->ulba);
         break;
     }
 }
