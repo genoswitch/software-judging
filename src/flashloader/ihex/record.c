@@ -5,6 +5,11 @@
 // memset, memcpy
 #include "pico/mem_ops.h"
 
+// Get the exact address for the specified record.
+uint32_t getAddress(ihexRecord *record) {
+    return record->ulba + record->addr;
+}
+
 // Converts an Intel hex record in text form to a binary representation.
 // Returns non-zero if the text could be parsed successfully
 int parseRecord(const char *line, ihexRecord *record)
