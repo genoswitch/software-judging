@@ -77,6 +77,10 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         // printf("CONTENTS: '%.*s'\n", endLineMatch, buf);
 
         ihexRecord rec;
+        // Use memset to zero out the memory occupied by this struct.
+        // aka. set all values to 0.
+        memset(&rec, 0, sizeof(rec));
+
         int result = parseRecord(buf, &rec);
         if (result == 0)
         {
