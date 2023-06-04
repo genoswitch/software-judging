@@ -34,6 +34,9 @@ uint32_t tud_dfu_get_timeout_cb(uint8_t alt, uint8_t state)
 
 ringbuf_t rb1;
 
+// Store last ulba between blocks
+uint32_t ulba = 0;
+
 void findMatches(int *startLineMatch, int *endLineMatch)
 {
     *startLineMatch = ringbuf_findchr(rb1, ':', 0);
@@ -81,12 +84,20 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         // aka. set all values to 0.
         memset(&rec, 0, sizeof(rec));
 
+        // Set ulba to previous value, or zero.
+        // If this record is an Extended Linear Address record, parseRecord will overwrite the value.
+        rec.ulba = ulba;
+
         int result = parseRecord(buf, &rec);
         if (result == 0)
         {
             __breakpoint();
         }
         processRecord(&rec);
+
+        // If the ulba is different to what is saved, update the variable.
+        if (rec.ulba != ulba) ulba = rec.ulba;
+        
         // printf("processed record with length %i\n", rec.count);
 
         free(buf);
