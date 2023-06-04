@@ -39,6 +39,12 @@ int parseRecord(const char *line, ihexRecord *record)
         record->addr = data[2] | (data[1] << 8);
         record->type = data[3];
         memcpy(record->data, &data[4], data[0]);
+
+        // if EXT_LIN_ADDR, set ulba
+        if (record->type == IHEX_TYPE_EXT_LIN_ADDR) {
+            record->ulba = ((data[0] << 8) + data[1]) << 16;
+        }
+
         success = 1;
     }
 
