@@ -42,7 +42,7 @@ int parseRecord(const char *line, ihexRecord *record)
 
         // if EXT_LIN_ADDR, set ulba
         if (record->type == IHEX_TYPE_EXT_LIN_ADDR) {
-            record->ulba = ((data[0] << 8) + data[1]) << 16;
+            record->ulba = ((data[4] << 8) + data[5]) << 16;
         }
 
         success = 1;
