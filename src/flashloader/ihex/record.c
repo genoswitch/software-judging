@@ -50,6 +50,19 @@ int parseRecord(const char *line, ihexRecord *record)
             record->ulba = ((data[4] << 8) + data[5]) << 16;
         }
 
+        // if Universal Hex Block Start, set sectionId.
+        if (record->type == UHEX_TYPE_BLOCK_START) {
+            // Note: Thanks to the previous memcpy, data[4] is now record->data[0]
+            // Check if this record is valid. (0xCODE at index 6.)
+            if (data[6] = 0xc0 && data[7] == 0xde) {
+                // Valid! Copy data[4] and data[5] (uint16_t) to the sectionId variable.
+                record->sectionId = data[5] | (data[4] << 8);
+            } else {
+                // Invalid return a failure condition.
+                return 2;
+            }
+        }
+
         success = 1;
     }
 
