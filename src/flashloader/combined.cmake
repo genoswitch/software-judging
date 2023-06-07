@@ -50,6 +50,27 @@ add_custom_command(TARGET ${COMBINED} POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} --only-section .flashloader -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/flashloader.hex
 )
 
+# ----- Start
+# Find nodejs executable script.
+# Src: https://github.com/eclipse/upm/blob/d6f76ff8c231417666594214679c49399513112e/cmake/modules/FindNode.cmake#L8-L12
+find_program (NODEJS_EXECUTABLE NAMES node nodejs
+    HINTS
+    $ENV{NODE_DIR}
+    PATH_SUFFIXES bin
+    DOC "Node.js interpreter")
+# ----- End
+
+if (NODEJS_EXECUTABLE)
+    message("Found Node.js executable at '${NODEJS_EXECUTABLE}'")
+    add_custom_command(TARGET ${COMBINED} POST_BUILD
+        COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/universal.hex"
+        COMMAND ${NODEJS_EXECUTABLE} ../lib/universal-hex/main.js ${SECTIONED_DIR}/flashloader.hex ${SECTIONED_DIR}/app.hex ${SECTIONED_DIR}/universal.hex
+    )
+else()
+    message(FATAL_ERROR "Node.js executable not found. Unable to create universal hex.")
+endif()
+
+
 # Create a UF2.
 # pico-flashloader uses custom python script to both combine and create the final uf2.
 # However, we now use another method using objcopy similar to what picowota does.
