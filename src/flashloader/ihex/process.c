@@ -23,6 +23,8 @@ static union
     tFlashHeader header;
     // If this buffer is overfilled, the USB transfer will fail.
     // (Is easily detectable by the host/sending device)
+    // "tud_dfu_finish_flashing(DFU_STATUS_OK);" (dfu.c) will never be called,
+    // So the transfer will appear to hang until it times out.
     uint8_t buffer[sizeof(tFlashHeader) + FLASH_BUF_SIZE];
 } flashbuf;
 
