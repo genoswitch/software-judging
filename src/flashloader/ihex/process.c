@@ -37,15 +37,20 @@ void processRecord(ihexRecord *rec)
     //__breakpoint();
     switch (rec->type)
     {
-    case IHEX_TYPE_DATA:
-        printf("ADDR: 0x%08x\n", getAddress(rec));
-        // seems sketchy, seems to copy into the buffer underneath it?
-        memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
-        offset += rec->count;
-        offset %= FLASH_BUF_SIZE;
-        if ((offset % 1024) == 0)
-        {
-            printf("RHULME RECIEVED BLOCK\n");
+    case UHEX_TYPE_CUSTOM_DATA:
+        // Check if the active sectionId is the app section id.
+        if (rec->sectionId == SECTION_ID_APP) {
+            printf("ADDR: 0x%08x\n", getAddress(rec));
+            // seems sketchy, seems to copy into the buffer underneath it?
+            memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
+            offset += rec->count;
+            offset %= FLASH_BUF_SIZE;
+            if ((offset % 1024) == 0)
+            {
+                printf("RHULME RECIEVED BLOCK\n");
+            }
+        } else {
+            printf("Ignoring this data record as section ID does not match...\n");
         }
         break;
     case IHEX_TYPE_EOF:
