@@ -1,0 +1,41 @@
+name: Lint
+
+# Run on any push or PR.
+on: ["push", "pull_request"]
+
+jobs:
+  include-guards:
+    name: Header Include Guards
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        # Don't checkout submodules
+        submodules: 'false'
+
+    - name: Run header includes guards check
+      uses: genoswitch/include-guards-check-action@36c8a9117aecd171e1b187155675f9b4d99f26ff
+      with:
+        path: "src/"
+        # Ignore tinyusb-config and rtos-config folders
+        ignore: '^\(core/rtos-config/\|core/tinyusb-config/\)'
+        pattern: "{last_dir}_{file_base}_H_"
+
+    - name: Run header includes guards check (tinyusb-config)
+      # Run even if previous step failed
+      if: '!cancelled()'
+      uses: genoswitch/include-guards-check-action@36c8a9117aecd171e1b187155675f9b4d99f26ff
+      with:
+        path: "src/core/tinyusb-config/"
+        pattern: "{file_base}_H_"
+
+    - name: Run header includes guards check (rtos-config)
+      # Run even if previous step failed
+      if: '!cancelled()'
+      uses: genoswitch/include-guards-check-action@36c8a9117aecd171e1b187155675f9b4d99f26ff
+      with:
+        path: "src/core/rtos-config/"
+        pattern: "FREERTOS_CONFIG_H"
