@@ -30,6 +30,26 @@ add_custom_command(TARGET ${COMBINED} POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex  ${COMBINED}.elf ${COMBINED}.hex
 )
 
+set(SECTIONED_DIR hex_sectioned)
+
+add_custom_command(TARGET ${COMBINED} POST_BUILD
+    COMMENT "Add temporary directory '${SECTIONED_DIR}' for sectioned hex files"
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${SECTIONED_DIR}
+)
+# Create a hex file WITHOUT the flashloader section
+add_custom_command(TARGET ${COMBINED} POST_BUILD 
+    COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/app.hex"
+    # Adjust the offset by 4k (0x1000) to match where the program is in the normal .hex
+    # Otherwise the flashloader section is removed but the remaining contents are shifted to start at the flashloader start address.
+    COMMAND ${CMAKE_OBJCOPY} --remove-section .flashloader --change-start 0x1000 -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/app.hex
+)
+
+# Create a hex file WITH ONLY the flashloader section
+add_custom_command(TARGET ${COMBINED} POST_BUILD 
+    COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/flashloader.hex"
+    COMMAND ${CMAKE_OBJCOPY} --only-section .flashloader -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/flashloader.hex
+)
+
 # Create a UF2.
 # pico-flashloader uses custom python script to both combine and create the final uf2.
 # However, we now use another method using objcopy similar to what picowota does.
