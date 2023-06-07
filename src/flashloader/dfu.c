@@ -37,6 +37,9 @@ ringbuf_t rb1;
 // Store last ulba between blocks
 uint32_t ulba = 0;
 
+// Store last sectionId between blocks.
+uint16_t sectionId;
+
 void findMatches(int *startLineMatch, int *endLineMatch)
 {
     *startLineMatch = ringbuf_findchr(rb1, ':', 0);
@@ -88,6 +91,10 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         // If this record is an Extended Linear Address record, parseRecord will overwrite the value.
         rec.ulba = ulba;
 
+        // Set sectionId to previous value, or zer.
+        // If this record is a Universal Hex Block Start record, parseRecord will overwrite the value.
+        rec.sectionId = sectionId;
+
         int result = parseRecord(buf, &rec);
         if (result == 0)
         {
@@ -97,6 +104,9 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
 
         // If the ulba is different to what is saved, update the variable.
         if (rec.ulba != ulba) ulba = rec.ulba;
+
+        // If the sectionId is different to what is saved, update thhe variable
+        if (rec.sectionId != sectionId) sectionId = rec.sectionId;
         
         // printf("processed record with length %i\n", rec.count);
 
