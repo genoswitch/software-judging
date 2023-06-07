@@ -19,6 +19,9 @@ jobs:
     steps:
     - name: "(pkgs): Update package lists"
       run: sudo apt-get update
+    
+    - name: "(pkgs): Hold snapd"
+      run: sudo apt-mark hold snapd
 
     - name: "(pkgs): Upgrade packages"
       run: sudo apt-get upgrade -y
