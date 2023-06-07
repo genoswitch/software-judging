@@ -1,3 +1,6 @@
+#ifndef TASKS_MCU_TEMPERATURE_H_
+#define TASKS_MCU_TEMPERATURE_H_
+
 void pvRegisterMcuTempTask(void);
 void mcu_temp_task(void *param);
 
@@ -10,3 +13,5 @@ static struct ADCTempMessage // Len: 8
     uint8_t bCode;     // 1 byte
     uint16_t temp_adc; // 2 bytes
 } temp_message;
+
+#endif /* TASKS_MCU_TEMPERATURE_H_ */

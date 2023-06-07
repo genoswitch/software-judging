@@ -1,3 +1,6 @@
+#ifndef USB_VENDOR_REQUEST_H_
+#define USB_VENDOR_REQUEST_H_
+
 // TU_ATTR_PACKED
 #include "tusb.h"
 
@@ -54,3 +57,5 @@ typedef struct TU_ATTR_PACKED
 } req_feature_set;
 
 bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_request_t const *request);
+
+#endif /* USB_VENDOR_REQUEST_H_ */

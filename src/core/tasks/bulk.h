@@ -1,3 +1,6 @@
+#ifndef TASKS_BULK_H_
+#define TASKS_BULK_H_
+
 // FreeRTOS core and queue libraries for QueueHandle_t typedef
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -16,3 +19,5 @@ static struct BaseMessage
     uint8_t bLength;
     uint8_t bCode;
 } base_message;
+
+#endif /* TASKS_BULK_H_ */
