@@ -1,3 +1,6 @@
+#ifndef IHEX_RECORD_H_
+#define IHEX_RECORD_H_
+
 #include <stdint.h>
 
 enum
@@ -33,3 +36,5 @@ typedef struct
 } ihexRecord;
 
 int parseRecord(const char *line, ihexRecord *record);
+
+#endif /* IHEX_RECORD_H_ */
