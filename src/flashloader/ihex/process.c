@@ -12,11 +12,18 @@
 // Offset within flash of the new app image to be flashed by the flashloader
 static const uint32_t FLASH_IMAGE_OFFSET = 128 * 1024;
 
+
+// Current image has around ~67k of binary data. (07.06.2023)
+// To futureproof, let's give 96k to store the buffered data.
+#define FLASH_BUF_SIZE 65536 + 32768
+
 // Buffer to hold the incoming data before flashing
 static union
 {
     tFlashHeader header;
-    uint8_t buffer[sizeof(tFlashHeader) + 65536];
+    // If this buffer is overfilled, the USB transfer will fail.
+    // (Is easily detectable by the host/sending device)
+    uint8_t buffer[sizeof(tFlashHeader) + FLASH_BUF_SIZE];
 } flashbuf;
 
 uint32_t offset = 0;
@@ -33,7 +40,7 @@ void processRecord(ihexRecord *rec)
         // seems sketchy, seems to copy into the buffer underneath it?
         memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
         offset += rec->count;
-        offset %= 65536;
+        offset %= FLASH_BUF_SIZE;
         if ((offset % 1024) == 0)
         {
             printf("RHULME RECIEVED BLOCK\n");
