@@ -17,6 +17,11 @@ enum
     UHEX_TYPE_OTHER_DATA = 0x0E
 };
 
+enum {
+    SECTION_ID_APP = 0xffa1,
+    SECTION_ID_FLASHLOADER = 0xffa0
+};
+
 typedef struct
 {
     uint8_t count;
