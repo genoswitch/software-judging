@@ -58,10 +58,31 @@ find_program (NODEJS_EXECUTABLE NAMES node nodejs
     $ENV{NODE_DIR}
     PATH_SUFFIXES bin
     DOC "Node.js interpreter")
+
+# Src: https://github.com/eclipse/upm/blob/d6f76ff8c231417666594214679c49399513112e/cmake/modules/FindNpm.cmake#L14
+find_program (NPM_EXECUTABLE NAMES npm
+    HINTS
+    /usr
+    DOC "NPM (Node Package Manager)"
+)
 # ----- End
+
+if(NPM_EXECUTABLE)
+    message("Found npm executable at '${NODEJS_EXECUTABLE}'")
+    # Runs before other rules
+    # TODO: Would be better if we could run this at configure time.
+    add_custom_command(TARGET ${COMBINED} PRE_BUILD
+        COMMENT "Installing npm dependencies for universal-hex"
+        WORKING_DIRECTORY ../lib/universal-hex
+        COMMAND ${NPM_EXECUTABLE} ci --no-scripts
+    )
+else()
+    message(FATAL_ERROR "NPM executable not found. Unable to create universal hex.")
+endif()
 
 if (NODEJS_EXECUTABLE)
     message("Found Node.js executable at '${NODEJS_EXECUTABLE}'")
+
     add_custom_command(TARGET ${COMBINED} POST_BUILD
         COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/universal.hex"
         COMMAND ${NODEJS_EXECUTABLE} ../lib/universal-hex/main.js ${SECTIONED_DIR}/flashloader.hex ${SECTIONED_DIR}/app.hex ${SECTIONED_DIR}/universal.hex
