@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "crc32.c"
+#include "crc32.h"
 
 #include <stdio.h>
 
