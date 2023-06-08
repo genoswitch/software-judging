@@ -3,7 +3,7 @@
 // CRC32 calculation from a pointer using RP2040 DMA.
 // (Polynomial 0x4C11DB7, input + output reflection, final XOR)
 // Extensively commented with sources and references listed where appropriate.
-static uint32_t crc32(void *ptr, uint32_t len)
+uint32_t crc32(void *ptr, uint32_t len)
 {
     // Initial write address
     uint32_t dest;
@@ -91,7 +91,7 @@ static uint32_t crc32(void *ptr, uint32_t len)
 // (Polynomial 0x4C11DB7, NO reflection, NO final XOR)
 // (rhulme's flashloader does not use reflection or final XOR for it's crc32 checks)
 // Extensively commented with sources and references listed where appropriate.
-static uint32_t crc32_no_reflect_xor(void *ptr, uint32_t len)
+uint32_t crc32_no_reflect_xor(void *ptr, uint32_t len)
 {
     // Initial write address
     uint32_t dest;
