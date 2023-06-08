@@ -68,7 +68,7 @@ find_program (NPM_EXECUTABLE NAMES npm
 # ----- End
 
 if(NPM_EXECUTABLE)
-    message("Found npm executable at '${NODEJS_EXECUTABLE}'")
+    message("Found npm executable at '${NPM_EXECUTABLE}'")
     # Runs before other rules
     # TODO: Would be better if we could run this at configure time.
     add_custom_command(TARGET ${COMBINED} PRE_BUILD
