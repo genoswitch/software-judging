@@ -9,10 +9,6 @@
 // memset, memcpy
 #include "pico/mem_ops.h"
 
-// Offset within flash of the new app image to be flashed by the flashloader
-static const uint32_t FLASH_IMAGE_OFFSET = 128 * 1024;
-
-
 // Current image has around ~67k of binary data. (07.06.2023)
 // To futureproof, let's give 96k to store the buffered data.
 #define FLASH_BUF_SIZE 65536 + 32768
