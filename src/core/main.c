@@ -23,6 +23,12 @@ extern void *__BUILD_INCLUDES_FLASHLOADER;
 
 #ifdef INCLUDES_FLASHLOADER
 #include "../flashloader/main.h"
+// lib/pico-flashloader (FLASH_APP_UPDATED)
+#include "flashloader.h"
+
+// RP2040 Watchdog (flashloader will set a scratch register if it
+// has updated something)
+#include "hardware/watchdog.h"
 #endif
 
 int main(void)
@@ -31,6 +37,13 @@ int main(void)
     prvSetupHardware();
 #ifdef INCLUDES_FLASHLOADER
     printf("INCLUDES: Flashloader support!\n");
+
+    // Check if we have just upgraded.
+    if (watchdog_hw->scratch[0] == FLASH_APP_UPDATED) {
+        printf("Application has just updated!\n");
+        // Reset the scratch register.
+        watchdog_hw->scratch[0] = 0;
+    }
 #endif
 
     const int has_flashloader = (int)&__BUILD_INCLUDES_FLASHLOADER;
