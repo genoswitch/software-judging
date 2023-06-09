@@ -39,20 +39,19 @@ void processRecord(ihexRecord *rec)
         // Check if the active sectionId is the app section id.
         if (rec->sectionId == SECTION_ID_APP)
         {
-            printf("ADDR: 0x%08x\n", getAddress(rec));
+            // rhulme's implementation
             // seems sketchy, seems to copy into the buffer underneath it?
+            // On the other hand, I have very little C/C++ experience
             memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
             offset += rec->count;
             offset %= FLASH_BUF_SIZE;
-            if ((offset % 1024) == 0)
-            {
-                printf("RHULME RECIEVED BLOCK\n");
-            }
+            // if ((offset % 1024) == 0)
+            //{
+            //     printf("Recieved a 1k block of firmware via DFU\n");
+            // }
         }
-        else
-        {
-            printf("Ignoring this data record as section ID does not match...\n");
-        }
+        // Section ID does not match, we can ignore this.
+        // eg. flashloader code at the start of the file.
         break;
     case IHEX_TYPE_EOF:
         printf("FOUND EOF\n");
