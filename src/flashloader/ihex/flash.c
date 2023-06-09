@@ -1,3 +1,11 @@
+// configNUM_CORES macro
+#include "FreeRTOSConfig.h"
+// If needed, include FreeRTOS task headers.
+#if configNUM_CORES > 1
+#include "FreeRTOS.h"
+#include "task.h"
+#endif
+
 #include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/sync.h"
@@ -34,8 +42,21 @@ void flashImage(tFlashHeader *header, uint32_t length)
 
     status = save_and_disable_interrupts();
 
+// If we have more than one core, we need to stop
+// processes on other cores from interrupting the flash write.
+#if configNUM_CORES > 1
+    // https://www.freertos.org/taskENTER_CRITICAL_taskEXIT_CRITICAL.html
+    taskENTER_CRITICAL();
+    uart_puts(PICO_DEFAULT_UART_INSTANCE, "Entered RTOS Critical Section\r\n");
+#endif
+
     flash_range_erase(FLASH_IMAGE_OFFSET, eraseLength);
     flash_range_program(FLASH_IMAGE_OFFSET, (uint8_t *)header, totalLength);
+
+#if configNUM_CORES > 1
+    taskEXIT_CRITICAL();
+    uart_puts(PICO_DEFAULT_UART_INSTANCE, "Exited RTOS Critical Section\r\n");
+#endif
 
     restore_interrupts(status);
     uart_puts(PICO_DEFAULT_UART_INSTANCE, "Rebooting into flashloader in 1 second\r\n");
