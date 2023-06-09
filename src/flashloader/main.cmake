@@ -18,6 +18,7 @@ target_sources(${MAIN_FL_LINKED} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/ihex/record.c
     ${CMAKE_CURRENT_LIST_DIR}/ihex/util.c
     ${CMAKE_CURRENT_LIST_DIR}/ihex/process.c
+    ${CMAKE_CURRENT_LIST_DIR}/ihex/flash.c
     ${RINGBUF_MODULE_PATH}/ringbuf.c
     ${RINGBUF_MODULE_PATH}/ringbuf.h
     ${FLASHLOADER_MODULE_PATH}/flashloader.h
