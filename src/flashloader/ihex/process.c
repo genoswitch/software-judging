@@ -1,6 +1,8 @@
 // lib/pico-flashloader
 #include "flashloader.h"
 
+#include "flash.h"
+
 #include "record.h"
 
 // breakpoints
@@ -35,7 +37,8 @@ void processRecord(ihexRecord *rec)
     {
     case UHEX_TYPE_CUSTOM_DATA:
         // Check if the active sectionId is the app section id.
-        if (rec->sectionId == SECTION_ID_APP) {
+        if (rec->sectionId == SECTION_ID_APP)
+        {
             printf("ADDR: 0x%08x\n", getAddress(rec));
             // seems sketchy, seems to copy into the buffer underneath it?
             memcpy(&flashbuf.header.data[offset], rec->data, rec->count);
@@ -45,12 +48,16 @@ void processRecord(ihexRecord *rec)
             {
                 printf("RHULME RECIEVED BLOCK\n");
             }
-        } else {
+        }
+        else
+        {
             printf("Ignoring this data record as section ID does not match...\n");
         }
         break;
     case IHEX_TYPE_EOF:
         printf("FOUND EOF\n");
+        // TODO: This should be called from dfu.c/tud_dfu_manifest_cb() instead.
+        flashImage(&flashbuf.header, offset);
         break;
     // skip
     case IHEX_TYPE_EXT_LIN_ADDR:
