@@ -103,11 +103,13 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         processRecord(&rec);
 
         // If the ulba is different to what is saved, update the variable.
-        if (rec.ulba != ulba) ulba = rec.ulba;
+        if (rec.ulba != ulba)
+            ulba = rec.ulba;
 
         // If the sectionId is different to what is saved, update thhe variable
-        if (rec.sectionId != sectionId) sectionId = rec.sectionId;
-        
+        if (rec.sectionId != sectionId)
+            sectionId = rec.sectionId;
+
         // printf("processed record with length %i\n", rec.count);
 
         free(buf);
@@ -115,54 +117,6 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         // prep for next iteration
         findMatches(&startLineMatch, &endLineMatch);
     }
-
-    // printf("SLM: %i, ELM: %i\n", startLineMatch, endLineMatch);
-    /**
-        int match;
-        // 'thing' works, "thing" does not (returns size)
-        match = ringbuf_findchr(rb1, '\n', 0);
-        if (match != ringbuf_bytes_used(rb1))
-        {
-            if (match == 0)
-            {
-                // First character is a :
-                // To avoid only doing head -> index (0)
-                // Lets search again starting from index 1.
-                match = ringbuf_findchr(rb1, ':', 1) - 1;
-                //__breakpoint();
-            }
-            // printf("Found a match at index %i\n", match);
-
-            // Get a buffer of the right size (calloc to zero fill)
-            char *buffer = malloc(match);
-
-            // Copy from tail up to and including the match index
-            // This increments the tail i think.
-            ringbuf_memcpy_from(buffer, rb1, match);
-            // head +17 (match)
-            //__breakpoint();
-
-            printf("CONTENTS: '%.*s'\n", match, buffer);
-
-            /**ihexRecord rec;
-            int result = parseRecord(buffer, &rec);
-            if (result == 0)
-            {
-                __breakpoint();
-            }
-            free(buffer);
-            // processRecord(&rec);
-            //  printf("processed record with length %i\n", rec.count);
-
-            // re-run
-            // 'thing' works, "thing" does not (returns size)
-            match = ringbuf_findchr(rb1, '\n', 0);
-        }
-        else
-        {
-            __breakpoint();
-        }
-    */
     // printf("\nProcessed DFU packet: alt %u, blockNum %u, length %u\n", alt, block_num, length);
 
     // flashing op for download complete without error
