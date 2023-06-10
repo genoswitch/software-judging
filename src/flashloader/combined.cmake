@@ -85,7 +85,7 @@ if (NODEJS_EXECUTABLE)
 
     add_custom_command(TARGET ${COMBINED} POST_BUILD
         COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/universal.hex"
-        COMMAND ${NODEJS_EXECUTABLE} ../lib/universal-hex/main.js ${SECTIONED_DIR}/flashloader.hex ${SECTIONED_DIR}/app.hex ${SECTIONED_DIR}/universal.hex
+        COMMAND ${NODEJS_EXECUTABLE} ../lib/universal-hex/main.js ${SECTIONED_DIR}/flashloader.hex ${SECTIONED_DIR}/app.hex ${COMBINED}-universal.hex
     )
 else()
     message(FATAL_ERROR "Node.js executable not found. Unable to create universal hex.")
