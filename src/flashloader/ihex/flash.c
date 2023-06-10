@@ -17,6 +17,8 @@
 #include "process.h"
 #include "../crc32.h"
 
+#include "../spinlock.h"
+
 // lib/pico-flashloader
 #include "flashloader.h"
 
@@ -45,6 +47,9 @@ void flashImage(tFlashHeader *header, uint32_t length)
 // If we have more than one core, we need to stop
 // processes on other cores from interrupting the flash write.
 #if configNUM_CORES > 1
+    // Create a spinlock on core 1 (USB runs on core 0)
+    startSpinlock();
+
     // https://www.freertos.org/taskENTER_CRITICAL_taskEXIT_CRITICAL.html
     taskENTER_CRITICAL();
     uart_puts(PICO_DEFAULT_UART_INSTANCE, "Entered RTOS Critical Section\r\n");
@@ -54,6 +59,8 @@ void flashImage(tFlashHeader *header, uint32_t length)
     flash_range_program(FLASH_IMAGE_OFFSET, (uint8_t *)header, totalLength);
 
 #if configNUM_CORES > 1
+    stopSpinlock();
+
     taskEXIT_CRITICAL();
     uart_puts(PICO_DEFAULT_UART_INSTANCE, "Exited RTOS Critical Section\r\n");
 #endif

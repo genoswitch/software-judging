@@ -3,6 +3,8 @@
 // FreeRTOS version macro (tskKERNEL_VERSION_NUMBER)
 #include "task.h"
 
+#include "semaphores.h"
+
 // Standard libraries
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
@@ -58,6 +60,9 @@ int main(void)
 
     pvCreateUsbTasks();
     pvRegisterMcuTempTask();
+
+    // Create semaphores (mutex locks)
+    pvCreateSemaphores();
 
 #ifdef INCLUDES_FLASHLOADER
     pvRegisterFlashloaderTask();
