@@ -1,0 +1,6 @@
+{
+	"version": "0.0.1",
+	"dependencies": {
+		"@microbit/microbit-universal-hex": "^0.2.2"
+	}
+}

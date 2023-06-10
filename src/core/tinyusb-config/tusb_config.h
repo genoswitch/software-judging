@@ -56,7 +56,7 @@ extern "C"
 #endif
 
 #ifndef CFG_TUSB_OS
-#define CFG_TUSB_OS OPT_OS_NONE
+#define CFG_TUSB_OS OPT_OS_FREERTOS
 #endif
 
 #ifndef CFG_TUSB_DEBUG
@@ -94,6 +94,11 @@ extern "C"
 
 //------------- CLASS -------------//
 #define CFG_TUD_CDC 1
+
+#ifdef INCLUDES_FLASHLOADER
+#define CFG_TUD_DFU 1
+#endif
+
 #define CFG_TUD_MSC 0
 #define CFG_TUD_HID 0
 #define CFG_TUD_MIDI 0
@@ -107,6 +112,11 @@ extern "C"
 // If not configured vendor endpoints will not be buffered
 #define CFG_TUD_VENDOR_RX_BUFSIZE (TUD_OPT_HIGH_SPEED ? 512 : 64)
 #define CFG_TUD_VENDOR_TX_BUFSIZE (TUD_OPT_HIGH_SPEED ? 512 : 64)
+
+#ifdef INCLUDES_FLASHLOADER
+// DFU buffer size, it has to be set to the buffer size used in TUD_DFU_DESCRIPTOR
+#define CFG_TUD_DFU_XFER_BUFSIZE (TUD_OPT_HIGH_SPEED ? 512 : 64)
+#endif
 
 #ifdef __cplusplus
 }

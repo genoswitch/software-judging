@@ -1,4 +1,10 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/src",
-    "cmake.buildDirectory": "${workspaceFolder}/build"
+	"cmake.sourceDirectory": "${workspaceFolder}/src",
+	"cmake.buildDirectory": "${workspaceFolder}/build",
+
+	// Prettier configuration file path for lib/universal-hex
+	// The 'esbenp.prettier-vscode' defaults to (root)/.prettierrc,
+	// So a configuration change is needed to have it use a config file in another directory
+	"prettier.configPath": "lib/universal-hex/.prettierrc.js",
+	"cortex-debug.variableUseNaturalFormat": false
 }

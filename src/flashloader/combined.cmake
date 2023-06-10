@@ -30,6 +30,68 @@ add_custom_command(TARGET ${COMBINED} POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex  ${COMBINED}.elf ${COMBINED}.hex
 )
 
+set(SECTIONED_DIR hex_sectioned)
+
+add_custom_command(TARGET ${COMBINED} POST_BUILD
+    COMMENT "Add temporary directory '${SECTIONED_DIR}' for sectioned hex files"
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${SECTIONED_DIR}
+)
+# Create a hex file WITHOUT the flashloader section
+add_custom_command(TARGET ${COMBINED} POST_BUILD 
+    COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/app.hex"
+    # Adjust the offset by 4k (0x1000) to match where the program is in the normal .hex
+    # Otherwise the flashloader section is removed but the remaining contents are shifted to start at the flashloader start address.
+    COMMAND ${CMAKE_OBJCOPY} --remove-section .flashloader --change-start 0x1000 -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/app.hex
+)
+
+# Create a hex file WITH ONLY the flashloader section
+add_custom_command(TARGET ${COMBINED} POST_BUILD 
+    COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/flashloader.hex"
+    COMMAND ${CMAKE_OBJCOPY} --only-section .flashloader -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/flashloader.hex
+)
+
+# ----- Start
+# Find nodejs executable script.
+# Src: https://github.com/eclipse/upm/blob/d6f76ff8c231417666594214679c49399513112e/cmake/modules/FindNode.cmake#L8-L12
+find_program (NODEJS_EXECUTABLE NAMES node nodejs
+    HINTS
+    $ENV{NODE_DIR}
+    PATH_SUFFIXES bin
+    DOC "Node.js interpreter")
+
+# Src: https://github.com/eclipse/upm/blob/d6f76ff8c231417666594214679c49399513112e/cmake/modules/FindNpm.cmake#L14
+find_program (NPM_EXECUTABLE NAMES npm
+    HINTS
+    /usr
+    DOC "NPM (Node Package Manager)"
+)
+# ----- End
+
+if(NPM_EXECUTABLE)
+    message("Found npm executable at '${NPM_EXECUTABLE}'")
+    # Runs before other rules
+    # TODO: Would be better if we could run this at configure time.
+    add_custom_command(TARGET ${COMBINED} PRE_BUILD
+        COMMENT "Installing npm dependencies for universal-hex"
+        WORKING_DIRECTORY ../lib/universal-hex
+        COMMAND ${NPM_EXECUTABLE} ci --no-scripts
+    )
+else()
+    message(FATAL_ERROR "NPM executable not found. Unable to create universal hex.")
+endif()
+
+if (NODEJS_EXECUTABLE)
+    message("Found Node.js executable at '${NODEJS_EXECUTABLE}'")
+
+    add_custom_command(TARGET ${COMBINED} POST_BUILD
+        COMMENT "Creating (${COMBINED}) ${SECTIONED_DIR}/universal.hex"
+        COMMAND ${NODEJS_EXECUTABLE} ../lib/universal-hex/main.js ${SECTIONED_DIR}/flashloader.hex ${SECTIONED_DIR}/app.hex ${COMBINED}-universal.hex
+    )
+else()
+    message(FATAL_ERROR "Node.js executable not found. Unable to create universal hex.")
+endif()
+
+
 # Create a UF2.
 # pico-flashloader uses custom python script to both combine and create the final uf2.
 # However, we now use another method using objcopy similar to what picowota does.
