@@ -29,18 +29,22 @@ StaticTask_t cdc_taskdef;
 #endif
 
 // remember to start the scheduler using vTaskStartScheduler(); after calling this!
+
+// Create USB tasks.
+// Tie both tasks to core 0.
+// usbd and cdc must run on the same core or the cdc task will panic.
 void pvCreateUsbTasks(void)
 {
 #if configSUPPORT_STATIC_ALLOCATION
     // Create a task for tinyusb device stack
-    xTaskCreateStatic(usb_device_task, "usbd", USBD_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, usb_device_stack, &usb_device_taskdef);
+    xTaskCreateStaticAffinitySet(usb_device_task, "usbd", USBD_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, usb_device_stack, &usb_device_taskdef, 1 << 0);
 
     // Create CDC task
-    xTaskCreateStatic(cdc_task, "cdc", CDC_STACK_SZIE, NULL, configMAX_PRIORITIES - 2, cdc_stack, &cdc_taskdef);
+    xTaskCreateStaticAffinitySet(cdc_task, "cdc", CDC_STACK_SZIE, NULL, configMAX_PRIORITIES - 2, cdc_stack, &cdc_taskdef, 1 << 0);
 #else
     // Create tasks using dynamic memory allocation
-    xTaskCreate(usb_device_task, "usbd", USBD_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL);
-    xTaskCreate(cdc_task, "cdc", CDC_STACK_SZIE, NULL, configMAX_PRIORITIES - 2, NULL);
+    xTaskCreateAffinitySet(usb_device_task, "usbd", USBD_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, 1 << 0, NULL);
+    xTaskCreateAffinitySet(cdc_task, "cdc", CDC_STACK_SZIE, NULL, configMAX_PRIORITIES - 2, 1 << 0, NULL);
 #endif
 }
 
