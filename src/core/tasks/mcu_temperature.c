@@ -3,6 +3,8 @@
 #include "task.h"
 #include "queue.h"
 
+#include "../semaphores.h"
+
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
@@ -40,7 +42,6 @@ void mcu_temp_task(void *param)
 
     adc_init();
     adc_set_temp_sensor_enabled(true);
-    adc_select_input(4);
 
     /* Block for 500ms. */
     const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
@@ -49,6 +50,18 @@ void mcu_temp_task(void *param)
 
     while (1)
     {
+
+        // Take the mutex, which signals the ADC as unavailable
+        // If the mutex is in use, this will **block** until it is available again.
+        xSemaphoreTake(xADCMutex, portMAX_DELAY);
+
+        // Switch to the temperature input if needed
+        // As other tasks could have selected different inputs!
+        if (adc_get_selected_input() != 4)
+        {
+
+            adc_select_input(4);
+        }
 
         // Get a reading from the ADC.
         uint16_t raw = adc_read();
@@ -83,6 +96,10 @@ void mcu_temp_task(void *param)
         // Use a tickType of 0 to not block until a space if available.
         // TODO: Add handling for when the queue is full, although may be unlikely to happen.
         xQueueSend(queue, (void *)&pxPointerToxMessage, (TickType_t)0);
+
+        // Hand back the mutex to signal the ADC's availability to other tasks.
+        xSemaphoreGive(xADCMutex);
+
         // Delay (suspend) this task. Does not use CPU time.
         vTaskDelay(xDelay);
     }
