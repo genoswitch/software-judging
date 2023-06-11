@@ -72,10 +72,10 @@ if(NPM_EXECUTABLE)
     # Runs before other rules
     # TODO: Would be better if we could run this at configure time.
     add_custom_command(TARGET ${COMBINED} PRE_BUILD
-        COMMENT "Installing npm dependencies for universal-hex"
-        WORKING_DIRECTORY ../lib/universal-hex
-        COMMAND ${NPM_EXECUTABLE} ci --no-scripts
+        COMMENT "Running check deps script for universal-hex"
+        COMMAND ${CMAKE_COMMAND} -DNPM_EXECUTABLE=${NPM_EXECUTABLE} -P ${CMAKE_CURRENT_LIST_DIR}/check-node-deps.cmake
     )
+
 else()
     message(FATAL_ERROR "NPM executable not found. Unable to create universal hex.")
 endif()
