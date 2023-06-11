@@ -50,6 +50,11 @@ add_custom_command(TARGET ${COMBINED} POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} --only-section .flashloader -Oihex  ${COMBINED}.elf ${SECTIONED_DIR}/flashloader.hex
 )
 
+# CMake likes to cache variables but these locations may change
+# For example if fnm is used
+unset(NODEJS_EXECUTABLE)
+unset(NPM_EXECUTABLE)
+
 # ----- Start
 # Find nodejs executable script.
 # Src: https://github.com/eclipse/upm/blob/d6f76ff8c231417666594214679c49399513112e/cmake/modules/FindNode.cmake#L8-L12
