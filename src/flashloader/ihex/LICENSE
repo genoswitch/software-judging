@@ -1,21 +1,3 @@
-The code in this ihex directory is heavily based on the pico-flashloader example implementation available at
-
-https://github.com/rhulme/pico-flashloader/blob/master/app.c.
-
-pico-flashloader is licensed under BSD-3-Clause.
-
-Therefore, all files in this folder are licensed under BSD-3-Clause.
-
----
-
-Copyright 2021 Richard Hulme
-
-SPDX-License-Identifier: BSD-3-Clause
-
-Full license below:
-
----
-
 Copyright 2021 Richard Hulme
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
