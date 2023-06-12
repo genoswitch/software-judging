@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0 # all branches and tags
 
       - name: Mirror repository
-        uses: pixta-dev/repository-mirroring-action@674e65a7d483ca28dafaacba0d07351bdcc8bd75
+        uses: genoswitch/repository-mirroring-action@f0c4a723a841030c3fd86f76241a860edde03015
         with:
-          target_repo_url: git@gitlab.igem.org:jcxldn/genoswitch-firmware.git
+          target_repo_url: git@gitlab.igem.org:jcxldn/City-of-London-UK_firmware.git
           ssh_private_key: ${{ secrets.GITLAB_SSH_KEY }}
