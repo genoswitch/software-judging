@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0 # all branches and tags
 
       - name: Mirror repository
-        uses: genoswitch/repository-mirroring-action@f0c4a723a841030c3fd86f76241a860edde03015
+        uses: genoswitch/repository-mirroring-action@a76d61cd1d28ee9e2ab5b6b19cc825736f02b38d
         with:
           target_repo_url: git@gitlab.igem.org:jcxldn/City-of-London-UK_firmware.git
           ssh_private_key: ${{ secrets.GITLAB_SSH_KEY }}
