@@ -1561,6 +1561,10 @@
     (stroke (width 0) (type default))
     (uuid dd3243e5-4cdd-42e2-b8fe-b594ee4df0de)
   )
+  (wire (pts (xy 81.28 149.86) (xy 81.28 151.13))
+    (stroke (width 0) (type default))
+    (uuid dd473084-b1b9-4ed9-86c3-b02fba67644f)
+  )
   (wire (pts (xy 397.51 220.98) (xy 397.51 222.25))
     (stroke (width 0) (type default))
     (uuid dd5dd0f6-0b33-4032-aebd-6efb5e61b425)
@@ -3149,6 +3153,31 @@
       (project "genoswitch-rp2040"
         (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
           (reference "#PWR09") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:GND") (at 81.28 151.13 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid e75ca74e-2699-4d8c-a4b8-c052257453df)
+    (property "Reference" "#PWR022" (at 81.28 157.48 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "GND" (at 81.28 156.21 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 81.28 151.13 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 81.28 151.13 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 9094f137-8334-41a7-a63e-7f0824fb9749))
+    (instances
+      (project "genoswitch-rp2040"
+        (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
+          (reference "#PWR022") (unit 1)
         )
       )
     )
