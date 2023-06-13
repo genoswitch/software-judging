@@ -23,46 +23,41 @@ enum
     CUSTOM_REQUEST_FLASH_BINARY_END
 };
 
-// b prefix for byte value
 typedef struct TU_ATTR_PACKED
 {
     uint8_t bLength;
     uint8_t bCode;
+} req_base;
+
+// b prefix for byte value
+typedef struct TU_ATTR_PACKED
+{
+    req_base base;
     uint8_t bVersion;
 } req_version;
 
 typedef struct TU_ATTR_PACKED
 {
-    uint8_t bLength;
-    uint8_t bCode;
-} req_unknown_value;
-
-typedef struct TU_ATTR_PACKED
-{
-    uint8_t bLength;
-    uint8_t bCode;
+    req_base base;
     char sha1[40];
     char date[25]; // Seems to be "YYYY-MM-DD HH:mm:ss +0000"
 } req_build_info;
 
 typedef struct TU_ATTR_PACKED
 {
-    uint8_t bLength;
-    uint8_t bCode;
+    req_base base;
     uint8_t bId[8];
 } req_board_id;
 
 typedef struct TU_ATTR_PACKED
 {
-    uint8_t bLength;
-    uint8_t bCode;
+    req_base base;
     char bFeatures[1];
 } req_feature_set;
 
 typedef struct TU_ATTR_PACKED
 {
-    uint8_t bLength;
-    uint8_t bCode;
+    req_base base;
     // The Cortex M0+ can access up to 4GB in it's memory map.
     // To be safe, we will be using a uint32 (although unlikely we will need this many bytes)
     // TODO: Pico // RP2040 memory map layout?
