@@ -19,3 +19,12 @@ jobs:
         with:
           target_repo_url: git@gitlab.igem.org:jcxldn/City-of-London-UK_firmware.git
           ssh_private_key: ${{ secrets.GITLAB_SSH_KEY }}
+
+  merge:
+    name: Merge
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger webhook
+        run: curl -XPOST -u "${{ secrets.MERGE_PAT_USER}}:${{secrets.MERGE_PAT_PASS}}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/genoswitch/software-judging/dispatches --data '{"event_type": "merge_repo", "repo": "firmware"}'
