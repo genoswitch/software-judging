@@ -1,0 +1,5 @@
+# CMake build folder
+**/build
+
+# marus25.cortex-debug files
+.vscode/.cortex-debug*
