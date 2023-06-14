@@ -22,10 +22,14 @@ jobs:
 
   merge:
     name: Merge
-    
+
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Trigger webhook
-        run: |
-          curl -XPOST -u "${{ secrets.MERGE_PAT_USER}}:${{secrets.MERGE_PAT_PASS}}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/genoswitch/software-judging/dispatches --data '{"event_type": "merge_repo", "repo": "firmware"}'
+      - name: Trigger Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.MERGE_PAT }}
+          repository: genoswitch/software-judging
+          event-type: merge_repo
+          client-payload: '{"repo": "firmware"}'
