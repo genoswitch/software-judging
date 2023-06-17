@@ -40,6 +40,12 @@ jobs:
       - name: Read the source repository into a subdirectory
         run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
       
+      - name: Reconstruct root .gitmodules
+        run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
+      
+      - name: Stage .gitmodules
+        run: git add .gitmodules
+
       - name: Construct the commit message
         run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
       
@@ -82,6 +88,12 @@ jobs:
       - name: Read the source repository into a subdirectory
         run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
       
+      - name: Reconstruct root .gitmodules
+        run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
+      
+      - name: Stage .gitmodules
+        run: git add .gitmodules
+
       - name: Construct the commit message
         run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
       
@@ -124,6 +136,12 @@ jobs:
       - name: Read the source repository into a subdirectory
         run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
       
+      - name: Reconstruct root .gitmodules
+        run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
+      
+      - name: Stage .gitmodules
+        run: git add .gitmodules
+
       - name: Construct the commit message
         run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
       
