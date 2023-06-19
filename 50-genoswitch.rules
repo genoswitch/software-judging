@@ -1,0 +1,4 @@
+# udev rule to allow the web browser to access compatible hardware over webusb.
+
+# pid.codes allocation
+SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="4a62", GROUP="plugdev"
