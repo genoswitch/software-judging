@@ -30,6 +30,17 @@ sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 sudo pacman -S cmake arm-none-eabi-gcc arm-none-eabi-newlib arm-none-eabi-gdb arm-none-eabi-binutils python git nodejs npm
 ```
 
+If you wish to debug a device, you will need to install the following packages from the [AUR](https://aur.archlinux.org/).
+
+- [`openocd-picoprobe`](https://aur.archlinux.org/packages/openocd-picoprobe)
+- [`gdb-multiarch`](https://aur.archlinux.org/packages/gdb-multiarch)
+
+If you have [`yay`](https://github.com/Jguer/yay) installed, you can simply run the following:
+
+```shell
+yay -S openocd-picoprobe gdb-multiarch
+```
+
 ## Licensing
 
 The codebase is licensed under MIT.
