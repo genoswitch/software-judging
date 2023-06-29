@@ -34,12 +34,18 @@ jobs:
         # Don't identify as GitHub actions as this is intended for GitLab
         run: git config --global user.name "genoswitch-ci" && git config --global user.email genoswitch-ci@jcx.ovh
       
+#      - name: Merge (without committing) changes from the source repository
+#        run: git merge -s ours --allow-unrelated-histories --no-commit source/$SRC_BRANCH
+      
+#      - name: Read the source repository into a subdirectory
+#        run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
+
+      # Alternate method to avoid error from git read-tree command
+      # > error: Entry '{file}' overlaps with '{file}'.  Cannot bind.
+      # https://www.congruityservice.com/blog/fix-git-subtree-merge-wrong-directory-cannot-bind
       - name: Merge (without committing) changes from the source repository
-        run: git merge -s ours --allow-unrelated-histories --no-commit source/$SRC_BRANCH
-      
-      - name: Read the source repository into a subdirectory
-        run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
-      
+        run: git pull -s subtree -Xsubtree=firmware source $SRC_BRANCH --no-rebase --no-commit
+
       - name: Reconstruct root .gitmodules
         run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
       
