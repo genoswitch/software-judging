@@ -1659,7 +1659,7 @@
     (effects (font (size 1.27 1.27)) (justify left top))
     (uuid 9f42bbcc-7a73-4e55-a14d-3189a8f3aa51)
   )
-  (text_box "Input bypass capacitor (C1) may be required for regulator\nstability if the device is located more than a few inches from\nthe power source.\n\nThe input bypass capacitor (C1) should be mounted with the shortest\npossible track length directly across the regulator's input\nand ground terminals.[1]"
+  (text_box "Input bypass capacitor (C1) may be required for regulator\nstability if the device is located more than a few inches from\nthe power source.\n\nThe input bypass capacitor (C1) should be mounted with the shortest\npossible track length directly across the regulator's (U1) input\nand ground terminals.[1]"
     (at 339.09 223.52 0) (size 38.1 24.13)
     (stroke (width 0) (type default))
     (fill (type none))
