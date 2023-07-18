@@ -3001,7 +3001,7 @@
     (property "Value" "USB_B_Micro" (at 306.07 218.44 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 309.88 228.6 0)
+    (property "Footprint" "Connector_USB:USB_Micro-B_Amphenol_10118193-0001LF_Horizontal" (at 309.88 228.6 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 309.88 228.6 0)
