@@ -15,6 +15,9 @@
 #include "hardware/watchdog.h"
 #include "hardware/structs/watchdog.h"
 
+// tud_dfu_finish_flashing(DFU_STATUS_OK);
+#include "tusb.h"
+
 #include "record.h"
 #include "process.h"
 #include "../crc32.h"
@@ -68,6 +71,11 @@ void flashImage(tFlashHeader *header, uint32_t length)
 #endif
 
     restore_interrupts(status);
+
+    // flashing op for manifest is complete without error
+    // Application can perform checksum, should it fail, use appropriate status such as errVERIFY.
+    tud_dfu_finish_flashing(DFU_STATUS_OK);
+
     uart_puts(PICO_DEFAULT_UART_INSTANCE, "Rebooting into flashloader in 1 second\r\n");
 
     // Set up watchdog scratch registers so that the flashloader knows
