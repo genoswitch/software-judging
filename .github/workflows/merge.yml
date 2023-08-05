@@ -20,6 +20,7 @@ jobs:
     env:
       SRC_REPO: "${{ github.event.client_payload.repo }}"
       SRC_BRANCH: "${{ github.event.client_payload.branch }}"
+      DST_PATH: "${{ github.event.client_payload.path }}"
 
     steps:
       - name: Checkout repository
@@ -48,7 +49,7 @@ jobs:
       # > error: Entry '{file}' overlaps with '{file}'.  Cannot bind.
       # https://www.congruityservice.com/blog/fix-git-subtree-merge-wrong-directory-cannot-bind
       - name: Merge (without committing) changes from the source repository
-        run: git pull -s subtree -Xsubtree=firmware source $SRC_BRANCH --no-rebase --no-commit --allow-unrelated-histories
+        run: git pull -s subtree -Xsubtree=$DST_PATH source $SRC_BRANCH --no-rebase --no-commit --allow-unrelated-histories
 
       - name: Reconstruct root .gitmodules
         run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
