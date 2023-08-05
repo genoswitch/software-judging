@@ -33,4 +33,4 @@ jobs:
           token: ${{ secrets.MERGE_PAT }}
           repository: genoswitch/software-judging
           event-type: merge_repo
-          client-payload: '{"job": "merge-v2", "repo": "firmware", "branch": "main"}'
+          client-payload: '{"job": "merge-v2", "repo": "firmware", "branch": "main", "path": "hardware/firmware"}'
