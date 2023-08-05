@@ -7,7 +7,7 @@ if [ -f $GITMODULES_FILENAME ]; then
     rm $GITMODULES_FILENAME
 fi
 
-for d in */ ; do
+for d in */* ; do
     [ -L "${d%/}" ] && continue
 
     echo "Searching directory '$d' for .gitmodules file..."
@@ -18,18 +18,22 @@ for d in */ ; do
 
         echo "Found $GITMODULES_FILENAME in '$d'."
 
-        cp $d/$GITMODULES_FILENAME /tmp/$d.$GITMODULES_FILENAME
+        ESCAPED_FILENAME=$(echo $d | sed "s|/|_|")
 
-        sed -i "s/path\ = /path = $d\//g" /tmp/$d.$GITMODULES_FILENAME
+        echo "Using escaped filenname '$ESCAPED_FILENAME'."
+
+        cp $d/$GITMODULES_FILENAME /tmp/$ESCAPED_FILENAME.$GITMODULES_FILENAME
+
+        sed -i "s|path\ = |path = $d/|" /tmp/$ESCAPED_FILENAME.$GITMODULES_FILENAME
 
         if [ ! -f $GITMODULES_FILENAME ]; then
             echo "$GITMODULES_FILENAME not found in root dir! Creating..."
             touch $GITMODULES_FILENAME
         fi 
 
-        cat /tmp/$d.$GITMODULES_FILENAME | tee -a $GITMODULES_FILENAME > /dev/null
+        cat /tmp/$ESCAPED_FILENAME.$GITMODULES_FILENAME | tee -a $GITMODULES_FILENAME > /dev/null
 
-        rm /tmp/$d.$GITMODULES_FILENAME
+        rm /tmp/$ESCAPED_FILENAME.$GITMODULES_FILENAME
         
     fi
 done
