@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BSD-3-Clause (rhulme/pico-flashloader)
 
+#include "process.h"
+
 // lib/pico-flashloader
 #include "flashloader.h"
-
-#include "flash.h"
 
 #include "record.h"
 
@@ -13,20 +13,7 @@
 // memset, memcpy
 #include "pico/mem_ops.h"
 
-// Current image has around ~67k of binary data. (07.06.2023)
-// To futureproof, let's give 96k to store the buffered data.
-#define FLASH_BUF_SIZE 65536 + 32768
-
-// Buffer to hold the incoming data before flashing
-static union
-{
-    tFlashHeader header;
-    // If this buffer is overfilled, the USB transfer will fail.
-    // (Is easily detectable by the host/sending device)
-    // "tud_dfu_finish_flashing(DFU_STATUS_OK);" (dfu.c) will never be called,
-    // So the transfer will appear to hang until it times out.
-    uint8_t buffer[sizeof(tFlashHeader) + FLASH_BUF_SIZE];
-} flashbuf;
+flashbuf_t flashbuf;
 
 uint32_t offset = 0;
 uint32_t count = 0;
@@ -57,8 +44,7 @@ void processRecord(ihexRecord *rec)
         break;
     case IHEX_TYPE_EOF:
         printf("FOUND EOF\n");
-        // TODO: This should be called from dfu.c/tud_dfu_manifest_cb() instead.
-        flashImage(&flashbuf.header, offset);
+        // Flashing is done in tud_dfu_manifest_cb.
         break;
     // skip
     case IHEX_TYPE_EXT_LIN_ADDR:
