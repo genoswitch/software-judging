@@ -4,6 +4,8 @@
 
 #include "ihex/record.h"
 #include "ihex/process.h"
+// flashImage
+#include "ihex/flash.h"
 
 #include "ringbuf.h"
 
@@ -134,7 +136,6 @@ void tud_dfu_manifest_cb(uint8_t alt)
     (void)alt; // Ignore paramater
     printf("Download finished!\n");
 
-    // flashing op for manifest is complete without error
-    // Application can perform checksum, should it fail, use appropriate status such as errVERIFY.
-    tud_dfu_finish_flashing(DFU_STATUS_OK);
+    // tud_dfu_finish_flashing is called in flashImage.
+    flashImage(&flashbuf.header, offset);
 }
