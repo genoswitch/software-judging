@@ -16,35 +16,35 @@ import { FlashBinaryEnd } from "./structs/vendor/flashBinaryEnd";
 
 export class Client {
 	// Internal emitter used for responses from the worker
-	private emitter: EventEmitter;
+	private privateEmitter: EventEmitter;
 	// Public emitter used to that downstream code can "subscribe" to bulk (streaming) events.
 	private publicEmitter;
 	private worker: Worker;
 
 	constructor() {
-		this.emitter = new EventEmitter();
+		this.privateEmitter = new EventEmitter();
 		this.publicEmitter = new EventEmitter();
 
 		this.worker = new Worker(
-			new URL(/* webpackChunkName: "worker" */ "./workers/webusb.ts", import.meta.url)
+			new URL(/* webpackChunkName: "worker" */ "./worker/index.ts", import.meta.url)
 		);
 		this.worker.onmessage = this.onMessage;
 
 		// Create a listener for a bulk response
-		this.emitter.on("response_bulk", (res: EventBulkInterrupt) => {
+		this.privateEmitter.on("response_bulk", (res: EventBulkInterrupt) => {
 			// Emit a message (on the public emitter) corresponding to the id embedded in the event.
 			this.publicEmitter.emit(`${res.id}`, res.data);
 		});
 	}
 
 	// Getter for the public emitter
-	getEmitter() {
+	get emitter() {
 		return this.publicEmitter;
 	}
 
 	private makeResponsePromise(id: string): Promise<EventResponse> {
 		return new Promise((resolve, reject) => {
-			this.emitter.once(`response_${id}`, (res: EventResponse) => {
+			this.privateEmitter.once(`response_${id}`, (res: EventResponse) => {
 				resolve(res);
 			});
 		});
@@ -141,7 +141,7 @@ export class Client {
 	}
 
 	private onMessage = (ev: MessageEvent<EventResponse>) => {
-		this.emitter.emit(`response_${ev.data.req.id}`, ev.data);
+		this.privateEmitter.emit(`response_${ev.data.req.id}`, ev.data);
 	};
 
 	async go() {
@@ -153,39 +153,36 @@ export class Client {
 	// The worker sends a object representation of the corresponding 'struct' class.
 	// We can then reconstruct an instance of the corresponding class using this object representation.
 
-	async getVersion() {
-		const req = new EventRequest(EventType.GET_VERSION);
+	// type parameter: https://stackoverflow.com/a/26696476
+	private async makeEventRequest<T>(
+		type: { new (p1: any, p2: any): T },
+		eventType: EventType,
+		data?: any
+	) {
+		const req = new EventRequest(eventType);
 		const res = await this.makeRequest(req);
 		// Reconstruct a new instance using the object representation returned in the message.
-		return new Version(null, res.data);
+		return new type(null, res.data);
 	}
 
-	async getBuildInfo() {
-		const req = new EventRequest(EventType.GET_BUILD_INFO);
-		const res = await this.makeRequest(req);
-		// Reconstruct a new instance using the object representation returned in the message.
-		return new BuildInfo(null, res.data);
+	get version() {
+		return this.makeEventRequest(Version, EventType.GET_VERSION);
 	}
 
-	async getBoardInfo() {
-		const req = new EventRequest(EventType.GET_BOARD_INFO);
-		const res = await this.makeRequest(req);
-		// Reconstruct a new instance using the object representation returned in the message.
-		return new BoardInfo(null, res.data);
+	get buildInfo() {
+		return this.makeEventRequest(BuildInfo, EventType.GET_BUILD_INFO);
 	}
 
-	async getFeatureSet() {
-		const req = new EventRequest(EventType.GET_FEATURE_SET);
-		const res = await this.makeRequest(req);
-		// Reconstruct a new instance using the object representation returned in the message.
-		return new FeatureSet(null, res.data);
+	get boardInfo() {
+		return this.makeEventRequest(BoardInfo, EventType.GET_BOARD_INFO);
 	}
 
-	async getFlashBinaryEnd() {
-		const req = new EventRequest(EventType.GET_FLASH_BINARY_END);
-		const res = await this.makeRequest(req);
-		// Reconstruct a new isntance using the object representation returned in the message.
-		return new FlashBinaryEnd(null, res.data);
+	get featureSet() {
+		return this.makeEventRequest(FeatureSet, EventType.GET_FEATURE_SET);
+	}
+
+	get flashBinaryEnd() {
+		return this.makeEventRequest(FlashBinaryEnd, EventType.GET_FLASH_BINARY_END);
 	}
 
 	async getBulkListenerStatus() {
