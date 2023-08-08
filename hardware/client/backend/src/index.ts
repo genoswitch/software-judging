@@ -62,13 +62,13 @@ export class Client {
 		}
 	}
 
-	private async workerCreateClient() {
+	public async workerCreateClient() {
 		const req = new EventRequest(EventType.NEW_CLIENT);
 		const res = await this.makeRequest(req);
 		console.log("Created client!");
 	}
 
-	private async workerHasDevice() {
+	public async hasDevice() {
 		const req = new EventRequest(EventType.HAS_DEVICE);
 		const res = await this.makeRequest(req);
 		if (typeof res.data == "boolean") {
@@ -80,23 +80,27 @@ export class Client {
 
 	// requestDevice is only accessible from the main thread
 	// After getting a device the [worker] navigator.usb.devices[] will populate
-	private async requestDevice() {
+	public async requestDevice() {
 		// 1. Check to see if the worker already has a device.
-		const hasDevice = await this.workerHasDevice();
+		const hasDevice = await this.hasDevice();
 		if (!hasDevice) {
-			const device = await navigator.usb.requestDevice({
-				filters: [{ vendorId: Constants.USB_VENDOR_ID }],
-			});
-			if (device != null) {
-				console.log("Found device!");
-				await this.workerSendDevice(device);
+			try {
+				const device = await navigator.usb.requestDevice({
+					filters: [{ vendorId: Constants.USB_VENDOR_ID }],
+				});
+				if (device != null) {
+					console.log("Found device!");
+					await this.workerSendDevice(device);
+				}
+			} catch (err: any) {
+				console.log("No device selected.");
 			}
 		}
 	}
 
 	// Now we have to send the PID and VID to the worker.
 	// Inspired by example @ https://github.com/odejesush/webusb-on-workers/blob/8bec09744a26c83e7931f21d506035b6e5dbe327/EXPLAINER.md
-	private async workerSendDevice(device: USBDevice) {
+	public async workerSendDevice(device: USBDevice) {
 		const req = new EventRequest(EventType.RECV_DEVICE_INFO, {
 			vendorId: device.vendorId,
 			productId: device.productId,
@@ -105,13 +109,13 @@ export class Client {
 		console.log("Sent device info to worker.");
 	}
 
-	private async workerOpenDevice() {
+	public async workerOpenDevice() {
 		const req = new EventRequest(EventType.OPEN_DEVICE);
 		await this.makeRequest(req);
 		console.log("Opened usb device.");
 	}
 
-	private async workerFindInterface() {
+	public async workerFindInterface() {
 		const req = new EventRequest(EventType.FIND_INTERFACE);
 		const res = await this.makeRequest(req);
 		// Check return datatype?
@@ -119,7 +123,7 @@ export class Client {
 		console.log("Found interface", res.data);
 	}
 
-	private async workerClaimInterface() {
+	public async workerClaimInterface() {
 		const req = new EventRequest(EventType.CLAIM_INTERFACE);
 		await this.makeRequest(req);
 		console.log("Claimed interface");
