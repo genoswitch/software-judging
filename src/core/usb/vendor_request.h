@@ -20,7 +20,8 @@ enum
     CUSTOM_REQUEST_BUILD_INFO,
     CUSTOM_REQUEST_BOARD_ID,
     CUSTOM_REQUEST_FEATURE_SET,
-    CUSTOM_REQUEST_FLASH_BINARY_END
+    CUSTOM_REQUEST_FLASH_BINARY_END,
+    CUSTOM_REQUEST_DEVICE_TYPE
 };
 
 typedef struct TU_ATTR_PACKED
@@ -63,6 +64,12 @@ typedef struct TU_ATTR_PACKED
     // TODO: Pico // RP2040 memory map layout?
     uint32_t bEndAddress;
 } req_flash_binary_end;
+
+typedef struct TU_ATTR_PACKED
+{
+    req_base base;
+    uint8_t bDeviceType;
+} req_device_type;
 
 bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_request_t const *request);
 

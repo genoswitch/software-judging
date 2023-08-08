@@ -13,6 +13,7 @@
 #include "git.h"
 
 #include "../feature_set.h"
+#include "../determine_device_type.h"
 
 // pico build info: __flash_binary end value from the linker
 #include "pico/binary_info.h"
@@ -84,6 +85,15 @@ bool handle_custom_vendor_req(uint8_t rhport, uint8_t stage, tusb_control_reques
             .bEndAddress = (uint32_t)&__flash_binary_end,
         };
         return tud_control_xfer(rhport, request, (void *)(uintptr_t)&flash_binary_end, flash_binary_end.base.bLength);
+    }
+    case CUSTOM_REQUEST_DEVICE_TYPE:
+    {
+        const req_device_type device_type = {
+            .base.bLength = 3,
+            .base.bCode = CUSTOM_REQUEST_DEVICE_TYPE,
+            .bDeviceType = determineDevice(),
+        };
+        return tud_control_xfer(rhport, request, (void *)(uintptr_t)&device_type, device_type.base.bLength);
     }
     default:
         // Unknown value

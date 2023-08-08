@@ -7,6 +7,8 @@
 
 #include "semaphores.h"
 
+#include "determine_device_type.h"
+
 // Standard libraries
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
@@ -39,6 +41,10 @@ int main(void)
 {
     // Setup hardware (init stdio, etc.)
     prvSetupHardware();
+
+    // Determine and display which device is being used.
+    printf("Detected Device Type: %i\n", determineDevice());
+
 #ifdef INCLUDES_FLASHLOADER
     printf("INCLUDES: Flashloader support!\n");
 
