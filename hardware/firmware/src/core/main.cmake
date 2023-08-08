@@ -35,6 +35,7 @@ target_sources(${MAIN} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/main.c
     ${CMAKE_CURRENT_LIST_DIR}/feature_set.c
     ${CMAKE_CURRENT_LIST_DIR}/semaphores.c
+    ${CMAKE_CURRENT_LIST_DIR}/determine_device_type.c
     ${CMAKE_CURRENT_LIST_DIR}/usb/tasks.c
     ${CMAKE_CURRENT_LIST_DIR}/usb/vendor_request.c
     # TinyUSB functions not picked up unless we include it here (tud_vendor_control_xfer_cb)

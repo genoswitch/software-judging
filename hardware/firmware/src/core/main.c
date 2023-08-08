@@ -7,6 +7,8 @@
 
 #include "semaphores.h"
 
+#include "determine_device_type.h"
+
 // Standard libraries
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
@@ -39,8 +41,14 @@ int main(void)
 {
     // Setup hardware (init stdio, etc.)
     prvSetupHardware();
+
+    printf("-----\nGenoswitch Measurement Platform\n-----\n");
+
+    // Determine and display which device is being used.
+    printf("Detected Device Type: %i\n", determineDevice());
+
 #ifdef INCLUDES_FLASHLOADER
-    printf("INCLUDES: Flashloader support!\n");
+    // printf("INCLUDES: Flashloader support!\n");
 
     // Check if we have just upgraded.
     if (watchdog_hw->scratch[0] == FLASH_APP_UPDATED)
@@ -52,8 +60,7 @@ int main(void)
 #endif
 
     const int has_flashloader = (int)&__BUILD_INCLUDES_FLASHLOADER;
-
-    printf("FLASHLOADER: %i\n", has_flashloader);
+    printf("Flashloader supported?: %i\n", has_flashloader);
 
     prvSerialDisplaySystemInfo();
 
