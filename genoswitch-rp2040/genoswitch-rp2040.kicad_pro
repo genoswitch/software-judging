@@ -478,11 +478,19 @@
       },
       {
         "netclass": "Power (1A)",
-        "pattern": "+3V3"
+        "pattern": "+*"
       },
       {
         "netclass": "Power (1A)",
         "pattern": "/USB_D-"
+      },
+      {
+        "netclass": "Power (1A)",
+        "pattern": "VBUS"
+      },
+      {
+        "netclass": "Power (1A)",
+        "pattern": "GND"
       }
     ]
   },
