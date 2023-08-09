@@ -216,7 +216,7 @@
 
   (footprint "Capacitor_SMD:C_01005_0402Metric" (layer "F.Cu")
     (tstamp 02f93041-f644-4e8b-8e32-cd11f6223005)
-    (at 112.052 67.835 90)
+    (at 138.39 68.321 90)
     (descr "Capacitor SMD 01005 (0402 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.vishay.com/docs/20056/crcw01005e3.pdf), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -320,7 +320,7 @@
 
   (footprint "Capacitor_SMD:C_01005_0402Metric" (layer "F.Cu")
     (tstamp 133a1373-f783-485b-8d8b-5884526d7f05)
-    (at 108.712 67.839 90)
+    (at 135.05 68.325 90)
     (descr "Capacitor SMD 01005 (0402 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.vishay.com/docs/20056/crcw01005e3.pdf), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -668,7 +668,7 @@
 
   (footprint "Capacitor_SMD:C_01005_0402Metric" (layer "F.Cu")
     (tstamp 2d61b250-6920-4137-8be6-09b300688fbd)
-    (at 109.474 67.839 -90)
+    (at 135.812 68.325 -90)
     (descr "Capacitor SMD 01005 (0402 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.vishay.com/docs/20056/crcw01005e3.pdf), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -896,7 +896,7 @@
 
   (footprint "Package_TO_SOT_SMD:SOT-223-3_TabPin2" (layer "F.Cu")
     (tstamp 33dbf4b7-c2a0-4fa4-ba76-753b9db39a8b)
-    (at 113.411 56.007 -90)
+    (at 115.212 57.15 -90)
     (descr "module CMS SOT223 4 pins")
     (tags "CMS SOT")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -960,7 +960,7 @@
 
   (footprint "Capacitor_SMD:C_01005_0402Metric" (layer "F.Cu")
     (tstamp 412a5469-8386-4ab1-af6a-c7fbdacc028e)
-    (at 113.538 50.419)
+    (at 114.287 51.65)
     (descr "Capacitor SMD 01005 (0402 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.vishay.com/docs/20056/crcw01005e3.pdf), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -1306,7 +1306,7 @@
 
   (footprint "Capacitor_SMD:C_01005_0402Metric" (layer "F.Cu")
     (tstamp 77fbf7ed-d7cf-40ed-ac8b-420369327a34)
-    (at 111.379 67.839 90)
+    (at 137.717 68.325 90)
     (descr "Capacitor SMD 01005 (0402 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: http://www.vishay.com/docs/20056/crcw01005e3.pdf), generated with kicad-footprint-generator")
     (tags "capacitor")
     (property "Sheetfile" "genoswitch-rp2040.kicad_sch")
@@ -1626,7 +1626,7 @@
     (property "ki_keywords" "RP2040 ARM Cortex-M0+ USB")
     (path "/17845252-9542-4327-b1fb-af223a0d6c63")
     (attr smd)
-    (fp_text reference "U3" (at 0 -4.82) (layer "F.SilkS")
+    (fp_text reference "U3" (at 26.338 -4.334) (layer "F.SilkS")
         (effects (font (size 1 1) (thickness 0.15)))
       (tstamp e5071c09-dfd3-4028-b3f7-e6111b3e9e26)
     )
@@ -2625,5 +2625,19 @@
     (stroke (width 0.15) (type default)) (layer "User.1") (tstamp 6c7481e9-9b55-4df2-8824-0fdad0c1880e))
 
   (segment (start 111.544 70.4735) (end 111.547 70.4765) (width 0.15) (layer "F.Cu") (net 7) (tstamp c6c7f7e9-6d3b-46eb-a722-75fad6c799b2))
+  (segment (start 108.162 50) (end 108.162 64.97655) (width 0.8) (layer "F.Cu") (net 10) (tstamp 675c11f2-cddd-4e64-b66a-16c73332572e))
+  (segment (start 107.94 48.358) (end 107.94 49.778) (width 0.1524) (layer "F.Cu") (net 10) (tstamp 76369d20-42d1-4667-ae56-1b5a6646eded))
+  (segment (start 108.162 64.97655) (end 110.965231 67.779781) (width 0.8) (layer "F.Cu") (net 10) (tstamp 86c0e38f-4792-4a43-ab2c-f10f9d07ef01))
+  (segment (start 107.94 49.778) (end 108.162 50) (width 0.1524) (layer "F.Cu") (net 10) (tstamp bc23bac2-18ac-4f89-9ec9-d5494cc82334))
+  (segment (start 110.747 70.4765) (end 110.747 69.326447) (width 0.1524) (layer "F.Cu") (net 10) (tstamp e88aff0d-e93f-46b1-8f25-1020c503f421))
+  (segment (start 110.965231 67.779781) (end 110.965231 69.108216) (width 0.8) (layer "F.Cu") (net 10) (tstamp ed486259-2155-42e9-b3d5-d63035687a18))
+  (segment (start 110.747 69.326447) (end 110.965231 69.108216) (width 0.1524) (layer "F.Cu") (net 10) (tstamp fa8aed29-3801-4d9f-9272-dff98b9c4f0f))
+  (segment (start 110.347 70.4765) (end 110.347 69.442385) (width 0.1524) (layer "F.Cu") (net 11) (tstamp 255e4f66-8e63-45fe-a4f3-fd8f43ad08c8))
+  (segment (start 110.347 69.442385) (end 110.012831 69.108216) (width 0.1524) (layer "F.Cu") (net 11) (tstamp 6b3c9d57-c435-4d3e-a95f-09be47371f8e))
+  (segment (start 107.112 65.27345) (end 110.012831 68.174281) (width 0.8) (layer "F.Cu") (net 11) (tstamp 77ca2684-f254-4d06-9701-bc013cbbc7ee))
+  (segment (start 110.012831 68.174281) (end 110.012831 69.108216) (width 0.8) (layer "F.Cu") (net 11) (tstamp 85cf1520-bc96-475a-8070-d675a8ce1926))
+  (segment (start 107.112 50) (end 107.112 65.27345) (width 0.8) (layer "F.Cu") (net 11) (tstamp aa81ba42-7622-411c-99db-170e5d431226))
+  (segment (start 107.29 48.358) (end 107.29 49.822) (width 0.1524) (layer "F.Cu") (net 11) (tstamp cc215781-91b4-4f3b-b739-bb4ef8b534f0))
+  (segment (start 107.29 49.822) (end 107.112 50) (width 0.1524) (layer "F.Cu") (net 11) (tstamp e576d30e-9383-4731-8d0d-f7b1c8504fa2))
 
 )

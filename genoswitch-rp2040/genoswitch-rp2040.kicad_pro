@@ -174,6 +174,7 @@
       "track_widths": [
         0.0,
         0.15,
+        0.1524,
         0.4,
         0.8
       ],
@@ -459,7 +460,7 @@
         "name": "USB Data",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.1524,
+        "track_width": 0.8,
         "via_diameter": 0.254,
         "via_drill": 0.508,
         "wire_width": 6
@@ -478,6 +479,10 @@
       {
         "netclass": "Power (1A)",
         "pattern": "+3V3"
+      },
+      {
+        "netclass": "Power (1A)",
+        "pattern": "/USB_D-"
       }
     ]
   },
