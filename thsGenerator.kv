@@ -1,0 +1,111 @@
+#:kivy 2.2.1
+
+<mainWindow>
+    name: "first"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 20
+        padding: 20
+        id: mainBox
+        name: "first"
+
+        Image:
+            source: "GENOSWITCH_logo_Coloured.png"
+
+        Label:
+            id: promptLabel
+            text: "enter miRNA name and sequence below"
+
+        Button:
+            text: "Add miRNA"
+            on_press: root.addMiRNA()
+
+        GridLayout:
+            cols: 4
+            id: inputGrid
+
+            Label:
+                text: "MiRNA name"
+            TextInput:
+                multiline: False
+            
+            Label:
+                text: "MiRNA sequence"
+            TextInput:
+                multiline: False
+        
+        Button:
+            text: "Submit"
+            on_press: root.submit()
+
+        Button:
+            text: "next"
+            on_press: root.manager.current = "second"
+
+<thsWindow>
+    name: "second"
+    
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 20
+        padding: 20
+        
+        Label:
+            text: "thsWindow"
+
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "first"
+
+            Button:
+                text: "next"
+                on_press: root.manager.current = "third"
+
+<triggerWindow>
+    name: "third"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 20
+        padding: 20
+        
+        Label:
+            text: "triggerWindow"
+
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "second"
+
+            Button:
+                text: "next"
+                on_press: root.manager.current = "fourth"
+            
+
+<complexWindow>
+    name: "fourth"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 20
+        padding: 20
+        
+        Label:
+            text: "thsWindow"
+
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "third"
