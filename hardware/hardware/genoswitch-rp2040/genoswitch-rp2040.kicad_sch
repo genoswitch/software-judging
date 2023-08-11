@@ -2618,10 +2618,6 @@
     (effects (font (size 2.54 2.54)) (justify left bottom))
     (uuid 82cb7e9f-0975-4384-8c3b-620964d94e52)
   )
-  (text "5V from VBUS (since device is USB-powered)" (at 186.69 171.45 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 891cc25d-b25c-41b7-926a-7b644000ed68)
-  )
   (text "R1 is NOT required for\nthis PARTICULAR flash device."
     (at 344.17 17.78 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
@@ -4077,6 +4073,31 @@
     )
   )
 
+  (symbol (lib_id "power:+3V3") (at 191.77 177.8 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 75bf7287-8661-44df-a3dc-84ecd404a82d)
+    (property "Reference" "#PWR019" (at 191.77 181.61 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "+3V3" (at 191.77 172.72 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 191.77 177.8 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 191.77 177.8 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid d5b682ba-8407-4bc4-8803-7daf829c853f))
+    (instances
+      (project "genoswitch-rp2040"
+        (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
+          (reference "#PWR019") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "power:+3V3") (at 228.6 147.32 90) (unit 1)
     (in_bom yes) (on_board yes) (dnp no)
     (uuid 76ab92c2-2f22-4d6c-8acf-429b4e3192cb)
@@ -4951,31 +4972,6 @@
       (project "genoswitch-rp2040"
         (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
           (reference "SW1") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "power:VBUS") (at 191.77 177.8 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid de8ccc5f-47bf-41da-bd79-79cd371300ea)
-    (property "Reference" "#PWR019" (at 191.77 181.61 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Value" "VBUS" (at 191.77 173.99 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "" (at 191.77 177.8 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 191.77 177.8 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 782f7c01-ceaf-44e1-afa4-2870bb09fc6c))
-    (instances
-      (project "genoswitch-rp2040"
-        (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
-          (reference "#PWR019") (unit 1)
         )
       )
     )
