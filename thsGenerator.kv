@@ -1,4 +1,18 @@
 #:kivy 2.2.1
+<Button>
+    size_hint: 1, None
+    size: 900, 70
+    background_normal: ""
+    background_color: (10/255.0, 22/255.0, 40/255.0, 1)
+    canvas.before:
+        Color:
+            rgba: 119/255.0, 217/255.0, 221/255.0, 1
+        Line:
+            width: 3
+            rectangle: self.x, self.y, self.width, self.height
+    
+<TextInput>
+    foreground_color: (10/255.0, 22/255.0, 40/255.0, 1)
 
 <mainWindow>
     name: "first"
@@ -6,8 +20,8 @@
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
-        spacing: 20
-        padding: 20
+        spacing: 25
+        padding: 30
         id: mainBox
         name: "first"
 
@@ -16,11 +30,23 @@
 
         Label:
             id: promptLabel
-            text: "enter miRNA name and sequence below"
+            text: "Enter miRNA name and sequence below"
+            text_size: self.size
+            size_hint: 1, None
+            size: 900, 30
+            valign: "center"
 
-        Button:
-            text: "Add miRNA"
-            on_press: root.addMiRNA()
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "Add miRNA"
+                on_press: root.addMiRNA()
+            
+            Button:
+                text: "Remove miRNA"
+                on_press: root.removeMiRNA()
+
 
         GridLayout:
             cols: 4
@@ -36,13 +62,20 @@
             TextInput:
                 multiline: False
         
-        Button:
-            text: "Submit"
-            on_press: root.submit()
+        GridLayout:
+            cols: 3
 
-        Button:
-            text: "next"
-            on_press: root.manager.current = "second"
+            Button:
+                text: "Submit"
+                on_press: root.submit()
+
+            Button:
+                text: "Clear"
+                on_press: root.clear()
+
+            Button:
+                text: "Next"
+                on_press: root.manager.current = "second"
 
 <thsWindow>
     name: "second"

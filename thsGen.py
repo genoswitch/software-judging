@@ -180,7 +180,7 @@ def andGateGen(sequenceDict):
 
 # Ensures correct inputs
 def checkCorrectCharacters(inputString):
-    validation = [i in baseList for i in inputString]
+    validation = [i in baseList for i in str(inputString).upper()]
     return(all(validation))
 
 
