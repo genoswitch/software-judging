@@ -2533,6 +2533,11 @@
     (fill (type none))
     (uuid 9c70a6ca-5bc8-40fa-a498-445fe7130007)
   )
+  (rectangle (start 12.065 57.785) (end 53.975 80.645)
+    (stroke (width 0) (type default))
+    (fill (type none))
+    (uuid a1ed6832-e6f5-4cd0-978e-4ea5878dc482)
+  )
 
   (text_box "The NCP1117 (U1) chosen here has a fixed output of 3.3v, is widely available, and can provide up to 1A of current, which is plenty.\n\nThe datasheet tells us that this device requires a 10μF on the input (C1) and another on the output (C4) [2]"
     (at 360.68 196.85 0) (size 44.45 17.78)
@@ -2572,9 +2577,19 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 24f03c5b-5d4c-4c74-aa08-b4e1f3fe16d7)
   )
+  (text "[5] Hardware Design with RP2040, Section 2.4, \"I/Os\", Subsection 2.4.1, \"USB\", Including Figure 9"
+    (at 12.7 273.05 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom) (href "https://datasheets.raspberrypi.com/rp2040/hardware-design-with-rp2040.pdf"))
+    (uuid 3420ca6d-d26a-470d-9b95-26c4f1e2e526)
+  )
   (text "128Mbit (16MB) QSPI Flash" (at 378.46 15.24 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 55fde93f-2df8-4edd-9cee-54afa0ff33ae)
+  )
+  (text "USB Series Termination Resistors [5]\nR6, R7 must be placed close to RP2040."
+    (at 12.7 62.865 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 5ec13a56-4d82-4255-820a-30451a99211a)
   )
   (text "[3]. Hardware Design with RP2040, Section 2.3. \"Crystal Oscillator\""
     (at 12.7 278.13 0)
@@ -2663,7 +2678,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom) (href "https://datasheets.raspberrypi.com/rp2040/hardware-design-with-rp2040.pdf"))
     (uuid fd97ce94-f8fe-45b8-a9bb-ab2d300d2dca)
   )
-  (text "References" (at 12.7 273.05 0)
+  (text "References" (at 12.7 270.51 0)
     (effects (font (size 2.54 2.54)) (justify left bottom))
     (uuid fe78d924-1cb7-4a14-abd3-0826b8d21946)
   )
@@ -3941,7 +3956,7 @@
     (property "Value" "27.4" (at 32.385 75.565 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 32.385 80.518 90)
+    (property "Footprint" "Resistor_SMD:R_0201_0603Metric" (at 32.385 80.518 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 32.385 78.74 0)
@@ -4116,7 +4131,7 @@
   )
 
   (symbol (lib_id "Device:R") (at 32.385 70.485 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (in_bom yes) (on_board yes) (dnp no)
     (uuid 78d50582-5811-49a4-b244-9b2bc2d2c8e8)
     (property "Reference" "R6" (at 32.385 64.77 90)
       (effects (font (size 1.27 1.27)))
@@ -4124,14 +4139,14 @@
     (property "Value" "27.4" (at 32.385 67.31 90)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 32.385 72.263 90)
+    (property "Footprint" "Resistor_SMD:R_0201_0603Metric" (at 32.385 72.263 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 32.385 70.485 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 5d830419-baeb-4485-902d-5ab33270362b))
-    (pin "2" (uuid 19eaf5f5-dede-45ca-8fd4-b1e4980485c9))
+    (pin "1" (uuid 54407403-4cbf-4f94-b40a-16532b50d3e1))
+    (pin "2" (uuid a14ce301-ea33-4fe4-a613-42a48a78d88d))
     (instances
       (project "genoswitch-rp2040"
         (path "/2e7ee4d9-1204-4a0f-bb2c-fb0f0d4af2cf"
