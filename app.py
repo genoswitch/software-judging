@@ -14,7 +14,7 @@ from kivy.event import EventDispatcher
 
 kv = Builder.load_file("thsGenerator.kv")
 
-Window.size = (1200,800)
+Window.size = (1500,800)
 
 class MyEventDispatcher(EventDispatcher):
     def __init__(self, **kwargs):
@@ -112,18 +112,34 @@ class mainWindow(Screen):
     
     def received(self):
         print("test event received")  
-        manager.get_screen("second").ids.thsGrid.add_widget(Image(source = "ths.png"))
+
+        manager.get_screen("second").ids.thsBox.add_widget(Image(source = "ths.png"))
+
         thsGridText = BoxLayout(orientation = "vertical")
-        manager.get_screen("second").ids.thsGrid.add_widget(thsGridText)
-        thsGridText.add_widget(Label(text = "Toehold switch sequence and structure"))
-        thsGridText.add_widget(Label(text = thsGen.bestThs.sequence))
-        thsGridText.add_widget(Label(text = str(thsGen.bestThs.strucEnergy.structure)))
-        thsGridText.add_widget(Label(text = "With these other possible structures"))
+        manager.get_screen("second").ids.thsBox.add_widget(thsGridText)
+
+        thsGridText.add_widget(Label(text = "Toehold switch sequence and Boltzmann sampled structures:"))
+        thsGridText.add_widget(Label(text = thsGen.bestThs.sequence, font_size = 10))
         for x in thsGen.bestThs.thsSamples:
-            thsGridText.add_widget(Label(text = str(x)))
+            thsGridText.add_widget(Label(text = str(x), font_size = 12))
+        thsGridText.add_widget(Label(text = f"Toehold binding percentage of: {str(round(thsGen.bestThs.exposure, 2))} Approximate minimum free energy of: {str(round(thsGen.bestThs.strucEnergy.energy, 2))}"))
+        
+        manager.get_screen("third").ids.triggerBox.add_widget(Image(source = "trigger.png"))
 
+        triggerGridText = BoxLayout(orientation = "vertical")
+        manager.get_screen("third").ids.triggerBox.add_widget(triggerGridText)
 
-
+        triggerGridText.add_widget(Label(text = "Trigger complex strand order and Boltzmann sampled structures:"))
+        bestThsOrderedStrands = thsGen.listAddition(thsGen.bestThs.strandsUsed[0:int((len(thsGen.strands)-1)/2)], thsGen.strands[int((len(thsGen.strands)-1)/2):int(len(thsGen.strands))])
+        triggerGridText.add_widget(Label(text = str(bestThsOrderedStrands), font_size = 10))
+        for x in thsGen.bestThs.triggerSamples:
+            triggerGridText.add_widget(Label(text = str(x), font_size = 12))
+        triggerGridText.add_widget(Label(text = f"Approximate minimum free energy of: {str(round(thsGen.triggerMFEStruc.energy, 2))}"))
+        for i, j in enumerate(bestThsOrderedStrands):
+            if (i % 2 == 1):
+                print(j, " is the and gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") ")
+        
+        
 
     ev.bind(on_thsGen = received)
 

@@ -534,6 +534,10 @@ def iterate():
         analysis()
         global isDone
         isDone = True
+        bestThsOrderedStrands = listAddition(bestThs.strandsUsed[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])
+        triggerMFE = mfe(strands=bestThsOrderedStrands, model=thsModel)
+        global triggerMFEStruc
+        triggerMFEStruc = triggerMFE[0]
 
        
 # Start function takes a dict of {miRNA name: miRNA sequence}, it also handles all the computation for 1 strand for miRNA since there is barely any code required to do so, no and gates present
