@@ -4,14 +4,27 @@ kivy.require('2.2.1') # replace with your current kivy version !
 import thsGen
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.event import EventDispatcher
 
 kv = Builder.load_file("thsGenerator.kv")
 
-Window.size = (800,550)
+Window.size = (1200,800)
+
+class MyEventDispatcher(EventDispatcher):
+    def __init__(self, **kwargs):
+        self.register_event_type('on_thsGen')
+        super(MyEventDispatcher, self).__init__(**kwargs)
+
+    def on_thsGen(self):
+        pass
+    
+ev = MyEventDispatcher()
 
 class mainWindow(Screen):
 
@@ -20,10 +33,10 @@ class mainWindow(Screen):
 
         if len(self.children[0].children[1].children) != 12:
             self.ids.inputGrid.add_widget(Label(text='miRNA name'))
-            self.ids.inputGrid.add_widget(TextInput(multiline=False))
+            self.ids.inputGrid.add_widget(TextInput(multiline=False, font_size = 18))
 
             self.ids.inputGrid.add_widget(Label(text='miRNA sequence'))
-            self.ids.inputGrid.add_widget(TextInput(multiline=False))
+            self.ids.inputGrid.add_widget(TextInput(multiline=False, font_size = 18))
         else:
             self.ids.promptLabel.text = "The software does not support more than 3 miRNA strands"
     
@@ -34,7 +47,7 @@ class mainWindow(Screen):
         # print(self.children[0].children[1].children)
         if len(self.children[0].children[1].children) > 4:
             for i in range(0, 4):
-                self.ids.inputGrid.remove_widget(self.children[0].children[1].children[-1])
+                self.ids.inputGrid.remove_widget(self.children[0].children[1].children[0])
         else:
             self.ids.promptLabel.text = "You must input 1 or more miRNA"
 
@@ -49,6 +62,11 @@ class mainWindow(Screen):
         # print(self.children[0])
         # print(self.children[0].children)
         # print(self.children[0].children[1].children)
+
+        print(self)
+        global manager
+        manager = self.manager
+        print(manager)
 
         contents = []
         for i, child in enumerate(self.children[0].children[1].children):
@@ -70,11 +88,19 @@ class mainWindow(Screen):
                 if all(checkList):
 
                     if all(len(i) > 14 for i in miRNASequences):
+                        self.ids.submitButton.disabled = True
                         dict = {miRNANames[i]: str(miRNASequences[i]).upper() for i in range(len(contents[1:][::2]))}
                         thsGen.miRNADict = dict
                         print(thsGen.miRNADict)
-                        self.ids.promptLabel.text = "Computing..."
-                        # thsGen.start()
+                        print(thsGen.isDone)
+                        thsGen.start()
+                        thsGen.thsPlotSave()
+                        thsGen.triggerPlotSave()
+                        thsGen.complexPlotSave()
+                        print(thsGen.isDone)
+                        self.ids.promptLabel.text = "Done!"
+                        self.ids.nextButton1.disabled = False
+                        ev.dispatch("on_thsGen")
                     else:
                         self.ids.promptLabel.text = "Sorry, our software doesn't support miRNA strands shorter than 15nt"
                 else:
@@ -83,6 +109,24 @@ class mainWindow(Screen):
                 self.ids.promptLabel.text = "Multipule miRNA strands cannot share the same name or sequence"
         else:
             self.ids.promptLabel.text = "Please fill in all of the boxes"
+    
+    def received(self):
+        print("test event received")  
+        manager.get_screen("second").ids.thsGrid.add_widget(Image(source = "ths.png"))
+        thsGridText = BoxLayout(orientation = "vertical")
+        manager.get_screen("second").ids.thsGrid.add_widget(thsGridText)
+        thsGridText.add_widget(Label(text = "Toehold switch sequence and structure"))
+        thsGridText.add_widget(Label(text = thsGen.bestThs.sequence))
+        thsGridText.add_widget(Label(text = str(thsGen.bestThs.strucEnergy.structure)))
+        thsGridText.add_widget(Label(text = "With these other possible structures"))
+        for x in thsGen.bestThs.thsSamples:
+            thsGridText.add_widget(Label(text = str(x)))
+
+
+
+
+    ev.bind(on_thsGen = received)
+
 
 
 

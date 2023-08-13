@@ -577,6 +577,8 @@ def start():
 
         global bestThs
         bestThs = ToeholdSwitch(thsMFE.mfe[0], str(), str(), ths, thsExposure, [miRNA], str(), thsSamples, str())
+        global isDone
+        isDone = True
     else:
         miRNADictVals.extend(list(miRNADict.values()))
         andGateGen(miRNADictVals)
@@ -602,6 +604,16 @@ def getKey(val):
 
 # The 3 functions below are just used in jupyter lab to display the switches and graphs     
     
+def thsPlotSave():
+    thsPairs = pairs(strands=[str(bestThs.sequence)], model=thsModel)
+    plt.imshow(thsPairs.to_array())
+    plt.xlabel("Base index")
+    plt.ylabel("Base index")
+    plt.title("Pair probabilities for toehold switch")
+    plt.colorbar()
+    plt.clim(0, 1)
+    plt.savefig('ths.png')  
+
 def thsDisplay():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("toehold switch sequence and structure: ")
@@ -611,15 +623,22 @@ def thsDisplay():
     for x in bestThs.thsSamples:
         print(str(x))
     print("and an overall toehold region binding site exposure of: ", str(round(bestThs.exposure, 2)), "%")
-    print("equilibrium probability pair matrix for toehold switch: ")
-    thsPairs = pairs(strands=[str(bestThs.sequence)], model=thsModel)
-    plt.imshow(thsPairs.to_array())
+    print("equilibrium probability pair matrix for toehold switch: ")  
+    thsPlotSave()
+
+def triggerPlotSave():
+    bestThsOrderedStrands = listAddition(bestThs.strandsUsed[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])
+    triggerPairs = pairs(strands=bestThsOrderedStrands, model=thsModel)
+    print("equilibrium probability pair matrix for trigger complex: ")
+    plt.imshow(triggerPairs.to_array())
     plt.xlabel("Base index")
     plt.ylabel("Base index")
-    plt.title("Pair probabilities for toehold switch")
-    plt.colorbar()
+    plt.title("Pair probabilities for trigger complex MFE")
+    print("*MFE structure may not be fully representative of the trigger complex's structure, which is why Boltzmann samples are taken. If the MFE structure closely resembles the boltzmann sampled ones, it is extremely likely to form, if not it will still be possible although at lower concentrations")
+    print("*Boltzmann samples will be more reliable and representative of in vitro reactions as hundreds of samples are taken, MFE structure is only taken into account to give an approximate free energy value and equilibrium pair probability matrix")
+    # plt.colorbar()
     plt.clim(0, 1)
-    plt.savefig('ths.png')    
+    plt.savefig('trigger.png')   
 
 def triggerDisplay():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -636,17 +655,17 @@ def triggerDisplay():
     for i, j in enumerate(bestThsOrderedStrands):
         if (i % 2 == 1):
             print(j, " is the and gate between ", getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") ")
-    triggerPairs = pairs(strands=bestThsOrderedStrands, model=thsModel)
-    print("equilibrium probability pair matrix for trigger complex: ")
-    plt.imshow(triggerPairs.to_array())
+    triggerPlotSave()
+
+def complexPlotSave():
+    plt.imshow(finalComplex.pairs.to_array())
     plt.xlabel("Base index")
     plt.ylabel("Base index")
-    plt.title("Pair probabilities for trigger complex MFE")
-    print("*MFE structure may not be fully representative of the trigger complex's structure, which is why Boltzmann samples are taken. If the MFE structure closely resembles the boltzmann sampled ones, it is extremely likely to form, if not it will still be possible although at lower concentrations")
-    print("*Boltzmann samples will be more reliable and representative of in vitro reactions as hundreds of samples are taken, MFE structure is only taken into account to give an approximate free energy value and equilibrium pair probability matrix")
-    plt.colorbar()
+    plt.title("Pair probabilities for activated toehold switch")
+    # plt.colorbar()
     plt.clim(0, 1)
-    plt.savefig('trigger.png')    
+    plt.savefig('complex.png')
+
 
 def complexDisplay(): 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -661,14 +680,7 @@ def complexDisplay():
         bindingSites += bindingSite
     print("with an activation percentage of: ", str(round(100-bindingSites.count(".")*100/len(bindingSites), 2)), "%")
     print("equilibrium probability pair matrix for activated toehold switch: ")
-    plt.imshow(finalComplex.pairs.to_array())
-    plt.xlabel("Base index")
-    plt.ylabel("Base index")
-    plt.title("Pair probabilities for activated toehold switch")
-    plt.colorbar()
-    plt.clim(0, 1)
-    plt.savefig('complex.png')
-
+    complexPlotSave()
 
 # thsDisplay()
 # triggerDisplay()
