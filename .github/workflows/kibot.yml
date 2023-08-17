@@ -4,16 +4,16 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - '**.sch'
+    - '**.kicad_sch'
     - '**.kicad_pcb'
   pull_request:
     paths:
-      - '**.sch'
+      - '**.kicad_sch'
       - '**.kicad_pcb'
 
 jobs:
   kibot:
-    name: KiBot
+    name: genoswitch-rp2040
 
     runs-on: ubuntu-latest
 
@@ -30,9 +30,9 @@ jobs:
           # optional - prefix to output defined in config
           dir: output
           # optional - schematic file
-          #schema: 'schematic.sch'
+          schema: 'genoswitch-rp2040/genoswitch-rp2040.kicad_sch'
           # optional - PCB design file
-          #board: 'pcb.kicad_pcb'
+          board: 'genoswitch-rp2040/genoswitch-rp2040.kicad_pcb'
       - name: upload results
         uses: actions/upload-artifact@v2
         with:
