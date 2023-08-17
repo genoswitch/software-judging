@@ -1,5 +1,0 @@
-(fp_lib_table
-  (version 7)
-  (lib (name "ABLS-12.000MHZ-B4-T")(type "KiCad")(uri "${KIPRJMOD}/../lib/mouser")(options "")(descr ""))
-  (lib (name "PTS815_SJM_250_SMTR_LFS")(type "KiCad")(uri "${KIPRJMOD}/../lib/mouser/PTS815_SJM_250_SMTR_LFS")(options "")(descr ""))
-)
