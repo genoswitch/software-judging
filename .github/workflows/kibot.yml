@@ -1,6 +1,7 @@
 name: KiBot
 
 on:
+  workflow_dispatch:
   push:
     paths:
     - '**.sch'
@@ -9,7 +10,7 @@ on:
     paths:
       - '**.sch'
       - '**.kicad_pcb'
-  
+
 jobs:
   kibot:
     name: KiBot
