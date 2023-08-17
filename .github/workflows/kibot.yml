@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0 # all branches and tags
       
-      - uses: INTI-CMNB/KiBot@v2
+      - uses: INTI-CMNB/KiBot@v2_k7
         with:
           # Required - kibot config file
           config: kibot_generated.kibot.yaml
