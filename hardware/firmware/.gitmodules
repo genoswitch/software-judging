@@ -1,0 +1,22 @@
+[submodule "lib/pico-sdk"]
+	path = lib/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
+[submodule "freertos-smp"]
+	path = lib/freertos-smp
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel
+	branch = smp
+[submodule "tinyusb"]
+	path = lib/tinyusb
+	url = https://github.com/hathach/tinyusb
+	branch = master
+[submodule "cmake-git-version-tracking"]
+	path = lib/cmake-git-version-tracking
+	url = https://github.com/andrew-hardin/cmake-git-version-tracking
+	branch = master
+[submodule "pico-flashloader"]
+	path = lib/pico-flashloader
+	url = https://github.com/genoswitch/pico-flashloader
+	branch = master
+[submodule "lib/ringbuf"]
+	path = lib/ringbuf
+	url = https://github.com/genoswitch/c-ringbuf
