@@ -29,11 +29,11 @@ jobs:
           # Fetch all history for all tags and branches
           fetch-depth: 0
       
-      - name: Add remote for source repository
-        run: git remote add -f source https://github.com/genoswitch/$SRC_REPO
+#      - name: Add remote for source repository
+#        run: git remote add -f source https://github.com/genoswitch/$SRC_REPO
         
-      - name: Fetch source repository
-        run: git fetch source
+#      - name: Fetch source repository
+#        run: git fetch source
       
       - name: "Set git committer information"
         # Don't identify as GitHub actions as this is intended for GitLab
@@ -45,11 +45,14 @@ jobs:
 #      - name: Read the source repository into a subdirectory
 #        run: git read-tree --prefix=$SRC_REPO -u source/$SRC_BRANCH
 
-      # Alternate method to avoid error from git read-tree command
-      # > error: Entry '{file}' overlaps with '{file}'.  Cannot bind.
-      # https://www.congruityservice.com/blog/fix-git-subtree-merge-wrong-directory-cannot-bind
-      - name: Merge (without committing) changes from the source repository
-        run: git pull -s subtree -Xsubtree=$DST_PATH source $SRC_BRANCH --no-rebase --no-commit --allow-unrelated-histories
+#      # Alternate method to avoid error from git read-tree command
+#      # > error: Entry '{file}' overlaps with '{file}'.  Cannot bind.
+#      # https://www.congruityservice.com/blog/fix-git-subtree-merge-wrong-directory-cannot-bind
+#      - name: Merge (without committing) changes from the source repository
+#        run: git pull -s subtree -Xsubtree=$DST_PATH source $SRC_BRANCH --no-rebase --no-commit --allow-unrelated-histories
+
+      - name: Merge changes from source repository usig git subtree
+        run: git subtree pull --prefix $DST_PATH https://github.com/genoswitch/$SRC_REPO $SRC_BRANCH
 
       - name: Reconstruct root .gitmodules
         run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
@@ -61,7 +64,7 @@ jobs:
         run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
       
       - name: Commit the changes
-        run: git commit -m "$ACTION_COMMIT_MSG"
+        run: git commit -m "$ACTION_COMMIT_MSG" || echo "Nothing to do."
       
       - name: Push the changes
         run: git push
