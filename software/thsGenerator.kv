@@ -1,0 +1,166 @@
+#:kivy 2.2.1
+<Button>
+    size_hint: 1, None
+    size: 900, 120
+    background_normal: ""
+    background_color: (10/255.0, 22/255.0, 40/255.0, 1)
+    canvas.before:
+        Color:
+            rgba: 119/255.0, 217/255.0, 221/255.0, 1
+        Line:
+            width: 3
+            rectangle: self.x, self.y, self.width, self.height
+    
+<TextInput>
+    foreground_color: (10/255.0, 22/255.0, 40/255.0, 1)
+
+<mainWindow>
+    name: "first"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 20
+        padding: 30
+        id: mainBox
+        name: "first"
+
+        Image:
+            source: "GENOSWITCH_logo_Coloured.png"
+
+        Label:
+            id: promptLabel
+            text: "Enter miRNA name and sequence below"
+            text_size: self.size
+            size_hint: 1, None
+            size: 900, 30
+            valign: "center"
+
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "Add miRNA"
+                on_press: root.addMiRNA()
+            
+            Button:
+                text: "Remove miRNA"
+                on_press: root.removeMiRNA()
+
+
+        GridLayout:
+            cols: 4
+            id: inputGrid
+
+            Label:
+                text: "MiRNA name"
+            TextInput:
+                multiline: False
+                font_size: 18
+            
+            Label:
+                text: "MiRNA sequence"
+            TextInput:
+                multiline: False
+                font_size: 18
+        
+        GridLayout:
+            cols: 3
+
+            Button:
+                id: submitButton
+                text: "Submit"
+                on_press: root.submit()
+
+            Button:
+                text: "Clear"
+                on_press: root.clear()
+
+            Button:
+                id: nextButton1
+                text: "Next"
+                disabled: True
+                on_press: root.manager.current = "second"
+
+<thsWindow>
+
+    name: "second"
+    
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 25
+        padding: 30
+
+        Label:
+            text: "Toehold Switch"
+            size_hint: 1, None
+            size: self.texture_size
+        
+        BoxLayout:
+            orientation: "horizontal"
+            id: thsBox
+            size_hint: 1, None
+            size: root.width, root.height * 0.7
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "first"
+
+            Button:
+                text: "next"
+                on_press: root.manager.current = "third"
+
+<triggerWindow>
+    name: "third"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 25
+        padding: 30
+
+        Label:
+            text: "Trigger Complex"
+            size_hint: 1, None
+            size: self.texture_size
+
+        BoxLayout:
+            orientation: "horizontal"
+            id: triggerBox
+            size_hint: 1, None
+            size: root.width, root.height * 0.7
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "second"
+
+            Button:
+                text: "next"
+                on_press: root.manager.current = "fourth"
+            
+
+<complexWindow>
+    name: "fourth"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 25
+        padding: 30
+        
+        Label:
+            text: "complexWindow"
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            Button:
+                text: "back"
+                on_press: root.manager.current = "third"
