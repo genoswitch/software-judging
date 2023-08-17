@@ -1,0 +1,39 @@
+name: KiBot
+
+on:
+  push:
+    paths:
+    - '**.sch'
+    - '**.kicad_pcb'
+  pull_request:
+    paths:
+      - '**.sch'
+      - '**.kicad_pcb'
+  
+jobs:
+  kibot:
+    name: KiBot
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all branches and tags
+      
+      - uses: INTI-CMNB/KiBot@v2
+        with:
+          # Required - kibot config file
+          config: kibot_generated.kibot.yaml
+          # optional - prefix to output defined in config
+          dir: output
+          # optional - schematic file
+          #schema: 'schematic.sch'
+          # optional - PCB design file
+          #board: 'pcb.kicad_pcb'
+      - name: upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output
