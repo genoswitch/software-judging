@@ -420,7 +420,7 @@ def tubeDef(numMiRNA):
    
     if(numMiRNA != 1):
         global sampledStructures
-        sampledStructures = sample(strands = list(listAddition(strands[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])), num_sample = 50, model = thsModel)
+        sampledStructures = sample(strands = list(listAddition(strands[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])), num_sample = 500, model = thsModel)
    
     for i in range(len(sampledStructures)):
         structDiff(countList, str(sampledStructures[i]), DPPlus)
@@ -444,12 +444,12 @@ def tubeDef(numMiRNA):
     scoreList = []
 
     for a, b in zip(weightList, countList):
-        scoreList.append(a*b)
+        scoreList.append((a/2)*b)
 
     # Getting 10 samples for the trigger structure to be passed to a toehold switch object
     triggerSampleList = []
     orderedScoreList = sorted(scoreList)
-    for i in orderedScoreList[:10]:
+    for i in orderedScoreList[:50]:
         triggerSampleList.append(str(sampledStructures[scoreList.index(i)]))
     thsObjs[-1].triggerSamples = list(triggerSampleList)
     
@@ -504,7 +504,7 @@ def analysis():
     triggerBindingSite = Strand(reverse(str(bestThs.toehold)), name = "trigger")
     thsComplex = Complex([triggerBindingSite, bestThsStrand])
     complexSet = ComplexSet(strands={bestThsStrand: 1e-8, triggerBindingSite: 1e-8}, complexes=SetSpec(max_size=0, include=[thsComplex]))
-    gap = 1.0
+    gap = 1.5
     global finalResult
     finalResult = complex_analysis(complexSet, compute=['pfunc', 'pairs', 'mfe', 'subopt'], options={'energy_gap': gap}, model=thsModel)
     global finalComplex
@@ -573,7 +573,7 @@ def start():
         thsComplex = Complex([miRNAStrand, thsStrand])
         complexSet = ComplexSet(strands={thsStrand: 1e-8, miRNAStrand: 1e-8}, complexes=SetSpec(max_size=0, include=[thsComplex]))
         global finalResult 
-        gap = 1.0
+        gap = 2.0
         finalResult = complex_analysis(complexSet, compute = ["pfunc", "pairs", "mfe", "subopt"], options={"energy_gap": gap}, model=thsModel)
         global finalComplex
         finalComplex = finalResult[thsComplex]
