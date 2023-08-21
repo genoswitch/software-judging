@@ -1,13 +1,17 @@
 import requests
+import random
+import string
 
 def getSVG(struc):
     postURL = "https://old.nupack.org/design/update_input_preview"
     postURL2 = "https://old.nupack.org/design/draw_multi_preview"
     input = struc
+    token = "".join(random.choice(string.ascii_letters) for i in range(10))
+    name = "".join(random.choice(string.ascii_letters) for i in range(10))
 
     payload = {
         "structure": input,
-        "preview_token": "cL7VXwyBgh",
+        "preview_token": token,
         "material": "rna"
     }
 
@@ -34,7 +38,7 @@ def getSVG(struc):
 
                 print("req3 success!!!")
 
-                with open("structure.png", "wb") as output:
+                with open(f"struc_{name}.png", "wb") as output:
                     output.write(req3.content)
 
                 # with open("structureSVG.svg", "r") as output:
@@ -49,3 +53,5 @@ def getSVG(struc):
                 #     for i, line in enumerate(lines):
                 #         if i not in svgKeySpan:
                 #             output.write(line)
+    return name
+

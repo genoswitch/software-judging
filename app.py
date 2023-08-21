@@ -33,17 +33,16 @@ ev = MyEventDispatcher()
 def strucShow(self):
     App.get_running_app().root.get_screen("strucShowWindow").ids.strucShowBox.clear_widgets()
 
-    if os.path.exists("structure.png"):
-        os.remove("structure.png")
+    for file in os.listdir():
+        if file.startswith("struc_"):
+            os.remove(file)
 
     print(self.text)
-    getSVG(self.text)
-    global lastScreen
-    lastScreen = print(App.get_running_app().root.current)
+    fileName = getSVG(self.text)
 
     App.get_running_app().root.current = "strucShowWindow"
     App.get_running_app().root.get_screen("strucShowWindow").ids.strucLabel.text = f"polymer graph visual for: {self.text}"
-    App.get_running_app().root.get_screen("strucShowWindow").ids.strucShowBox.add_widget(Image(source = "structure.png", size_hint = (1, 1), allow_stretch = True))
+    App.get_running_app().root.get_screen("strucShowWindow").ids.strucShowBox.add_widget(Image(source = f"struc_{fileName}.png", size_hint = (1, 1), allow_stretch = True))
 
 
 class strucShowScreen(Screen):
