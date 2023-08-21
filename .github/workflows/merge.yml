@@ -28,12 +28,13 @@ jobs:
         with:
           # Fetch all history for all tags and branches
           fetch-depth: 0
-      
-#      - name: Add remote for source repository
-#        run: git remote add -f source https://github.com/genoswitch/$SRC_REPO
+
+      # Fetch source repo for commit info when we create the commit message
+      - name: Add remote for source repository
+        run: git remote add -f source https://github.com/genoswitch/$SRC_REPO
         
-#      - name: Fetch source repository
-#        run: git fetch source
+      - name: Fetch source repository
+        run: git fetch source
       
       - name: "Set git committer information"
         # Don't identify as GitHub actions as this is intended for GitLab
@@ -54,7 +55,7 @@ jobs:
       - name: Construct the commit message
         run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
 
-      - name: Merge changes from source repository usig git subtree
+      - name: Merge changes from source repository using git subtree
         run: git subtree pull --prefix $DST_PATH --message "$ACTION_COMMIT_MSG" https://github.com/genoswitch/$SRC_REPO $SRC_BRANCH
 
       - name: Reconstruct root .gitmodules
