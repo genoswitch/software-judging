@@ -37,7 +37,7 @@
             valign: "center"
 
         GridLayout:
-            cols: 2
+            cols: 3
 
             Button:
                 text: "Add miRNA"
@@ -46,6 +46,10 @@
             Button:
                 text: "Remove miRNA"
                 on_press: root.removeMiRNA()
+
+            Button:
+                text: "get miRNA from miRBase"
+                on_press: root.getMirBase()
 
 
         GridLayout:
@@ -107,14 +111,11 @@
             orientation: "horizontal"
 
             Button:
-                text: "back"
-                on_press: root.manager.current = "first"
-
-            Button:
                 text: "next"
                 on_press: root.manager.current = "third"
 
 <triggerWindow>
+
     name: "third"
 
     BoxLayout:
@@ -147,6 +148,7 @@
             
 
 <complexWindow>
+
     name: "fourth"
 
     BoxLayout:
@@ -156,7 +158,15 @@
         padding: 30
         
         Label:
-            text: "complexWindow"
+            text: "Activated Toehold Switch"
+            size_hint: 1, None
+            size: self.texture_size
+        
+        BoxLayout:
+            orientation: "horizontal"
+            id: complexBox
+            size_hint: 1, None
+            size: root.width, root.height * 0.7
 
         BoxLayout:
             orientation: "horizontal"
@@ -164,3 +174,132 @@
             Button:
                 text: "back"
                 on_press: root.manager.current = "third"
+            
+            Button:
+                text: "save results to txt file"
+                on_press: root.resultsOutput()
+        
+<mirBaseWindow>
+
+    name: "mirBaseWindow"
+
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 25
+        padding: 30
+        
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 25
+            size_hint: 1, 0.05
+
+            Label:
+                size_hint: 0.2, 1
+                text: "search for miRNA from miRBase"
+
+            TextInput:
+                id: searchBar
+                size_hint: 0.7, 1
+                multiline: False
+                font_size: 18
+
+            Button:
+                size_hint: 0.1, 1
+                text: "search"
+                on_press: root.search()
+
+        ScrollView:
+            do_scroll_x: False
+            size_hint: 1, 0.75
+            size: root.width, root.height * 0.75
+            GridLayout:
+                cols: 4
+                size_hint: 1, None
+                height: self.minimum_height
+                id: searchGrid
+                padding: 25
+                spacing: 25
+                
+        
+        BoxLayout:
+            size_hint: 1, 0.25
+            orientation: "horizontal"
+
+            Button:
+                text: "back"
+                size_hint_y: 1
+                on_press: root.manager.current = "first"
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 1, 1
+
+                Label:
+                    text: "miRNA selected:"
+                    size_hint: 1, 0.03
+                    id: mirnaSelectText
+
+                BoxLayout:
+                    padding: 30
+                    orientation: "vertical"
+
+                    GridLayout:
+                        cols: 2
+                        spacing: 15
+                        id: mirnaSelectBox
+
+            Button:
+                id: mirBaseSubmitButton
+                text: "submit"
+                size_hint_y: 1
+                on_press: root.submitFromBase()
+
+            Button: 
+                id: nextButton2
+                text: "next"
+                size_hint_y: 1
+                disabled: True
+                on_press: root.manager.current = "second"
+
+
+<strucShowScreen>
+
+    name: "strucShowWindow"
+    spacing: 25
+    padding: 30
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            id: strucLabel
+            text: "ERROR 404 STRUCTURE SVG NOT FOUND"
+            size_hint: 1, 0.1
+        
+        BoxLayout:
+            orientation: "vertical"
+            id: strucShowBox
+            size_hint: 1, 0.65
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.2
+            spacing: 25
+            padding: 30
+
+            Button:
+                text: "to toehold switch results"
+                size_hint: 1, 0.9
+                on_press: root.manager.current = "second"
+
+            Button:
+                text: "to trigger complex results"
+                size_hint: 1, 0.9
+                on_press: root.manager.current = "third"
+            
+            Button:
+                text: "to activated toehold switch results"
+                size_hint: 1, 0.9
+                on_press: root.manager.current = "fourth"
+        
