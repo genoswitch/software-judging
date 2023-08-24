@@ -30,8 +30,9 @@ jobs:
           # Fetch all history for all tags and branches
           fetch-depth: 0
       
+      # Use HTTPS - https://github.com/git-lfs/git-lfs/issues/3041
       - name: Add merge repository as remote
-        run: git remote add merge ${{ github.repository }}
+        run: git remote add merge https://github.com/${{ github.repository }}
       
       # https://arwedus.wordpress.com/2021/09/09/avoid-missing-git-lfs-files-on-subtree-merge/
       # https://github.com/git-lfs/git-lfs/issues/854
