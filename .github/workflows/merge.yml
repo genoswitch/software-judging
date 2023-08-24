@@ -53,19 +53,19 @@ jobs:
 #        run: git pull -s subtree -Xsubtree=$DST_PATH source $SRC_BRANCH --no-rebase --no-commit --allow-unrelated-histories
 
       - name: Construct the commit message
-        run: chmod +x .github/workflows/commit-message-env.sh && ./.github/workflows/commit-message-env.sh
+        run: ./.github/workflows/commit-message-env.sh
 
       - name: Merge changes from source repository using git subtree
         run: git subtree pull --prefix $DST_PATH --message "$ACTION_COMMIT_MSG" https://github.com/genoswitch/$SRC_REPO $SRC_BRANCH
 
       - name: Reconstruct root .gitmodules
-        run: chmod +x .github/workflows/reconstruct-root-gitmodules.sh && ./.github/workflows/reconstruct-root-gitmodules.sh
+        run: ./.github/workflows/reconstruct-root-gitmodules.sh
       
       - name: Stage .gitmodules
         run: git add .gitmodules
 
       - name: Construct the commit message
-        run: chmod +x .github/workflows/commit-submodule-message-env.sh && ./.github/workflows/commit-submodule-message-env.sh
+        run: ./.github/workflows/commit-submodule-message-env.sh
       
       - name: Commit the changes
         run: git commit -m "$ACTION_COMMIT_MSG" || echo "Nothing to do."
