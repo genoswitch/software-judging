@@ -51,22 +51,33 @@
                 text: "get miRNA from miRBase"
                 on_press: root.getMirBase()
 
-
-        GridLayout:
-            cols: 4
-            id: inputGrid
+        BoxLayout:
+            orientation: "horizontal"
 
             Label:
                 text: "MiRNA name"
+
+            Label:
+                text: "MiRNA sequence"
+
+            Label:
+                text: "Reversed"
+
+        GridLayout:
+            cols: 3
+            id: inputGrid
+
             TextInput:
                 multiline: False
                 font_size: 18
             
-            Label:
-                text: "MiRNA sequence"
             TextInput:
                 multiline: False
                 font_size: 18
+
+            CheckBox:
+                # on_active: root.reverse(self, self.active)
+                
         
         GridLayout:
             cols: 3
