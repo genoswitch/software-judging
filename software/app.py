@@ -9,6 +9,7 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.button import Button
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen, ScreenManager
@@ -50,15 +51,20 @@ class strucShowScreen(Screen):
 
 class mainWindow(Screen):
 
+    def reverse(self, instance, value):
+        print(self, value)
+
     def addMiRNA(self):
         print("miRNA added")
 
-        if len(self.children[0].children[1].children) != 12:
-            self.ids.inputGrid.add_widget(Label(text='miRNA name'))
-            self.ids.inputGrid.add_widget(TextInput(multiline=False, font_size = 18))
+        if len(self.children[0].children[1].children) != 9:
+            self.ids.inputGrid.add_widget(TextInput(multiline = False, font_size = 18))
 
-            self.ids.inputGrid.add_widget(Label(text='miRNA sequence'))
-            self.ids.inputGrid.add_widget(TextInput(multiline=False, font_size = 18))
+            self.ids.inputGrid.add_widget(TextInput(multiline = False, font_size = 18))
+
+            self.ids.inputGrid.add_widget(CheckBox())
+            
+
         else:
             self.ids.promptLabel.text = "The software does not support more than 3 miRNA strands"
     
@@ -66,7 +72,7 @@ class mainWindow(Screen):
         print("miRNA removed")
         
         if len(self.children[0].children[1].children) > 4:
-            for i in range(0, 4):
+            for i in range(0, 3):
                 self.ids.inputGrid.remove_widget(self.children[0].children[1].children[0])
         else:
             self.ids.promptLabel.text = "You must input 1 or more miRNA"
@@ -79,20 +85,21 @@ class mainWindow(Screen):
 
     def clear(self):
         for i, child in enumerate(self.children[0].children[1].children):
-            if (i % 2 == 0):
+            if (i % 3 != 0):
                 child.text = ""
+            else:
+                print(child.active)
+        
     
     def submit(self):
         print("submitted")
         
-        print(Window.size[0])
-
         global manager
         manager = self.manager
 
         contents = []
         for i, child in enumerate(self.children[0].children[1].children):
-            if (i % 2 == 0):
+            if (i % 3 != 0):
                 contents.append(child.text)
 
         if all([i != "" for i in contents]):
@@ -186,6 +193,9 @@ class mainWindow(Screen):
         complexGridText.add_widget(Label(text = "*Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open", text_size = ((Window.size[0] - 200)/2, 50), font_size = 12)) 
 
     ev.bind(on_thsGen = received)
+
+        
+
 
 class thsWindow(Screen):
     pass
