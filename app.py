@@ -104,11 +104,23 @@ class mainWindow(Screen):
 
         if all([i != "" for i in contents]):
 
+            reverseList = []
+
+            for i, child in enumerate(self.children[0].children[1].children):
+                if (i % 3 == 0):
+                    reverseList.append(child.active)
+                    print(reverseList)
+
             miRNANames = contents[1:][::2]
             namesCheckSet = set(miRNANames)
 
             miRNASequences = contents[::2]
             seqCheckSet = set(miRNASequences)
+
+            for i, val in enumerate(reverseList):
+                if val:
+                    miRNASequences[i] = thsGen.reverse(miRNASequences[i])
+                    print("reversing")
 
             if (len(seqCheckSet) == len(miRNASequences) and len(namesCheckSet) == len(miRNANames)):
 
@@ -119,6 +131,7 @@ class mainWindow(Screen):
                     if all(len(i) > 14 for i in miRNASequences):
                         self.ids.submitButton.disabled = True
                         dict = {miRNANames[i]: str(miRNASequences[i]).upper() for i in range(len(contents[1:][::2]))}
+                        print(dict)
                         thsGen.miRNADict = dict
                         thsGen.start()
                         thsGen.thsPlotSave()
@@ -204,6 +217,7 @@ class triggerWindow(Screen):
     pass
 
 class complexWindow(Screen):
+
     def resultsOutput(self):
         print("outputting txt file")
         outputFile = open("results.txt","w")
@@ -241,9 +255,20 @@ class complexWindow(Screen):
             outputFile.write(f"{x.structure} ({round(x.energy, 2)} kcal/mol) \n")
         outputFile.write("Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open")
         outputFile.write("Here suboptimal energy structures are used as they are incredibly similar to taking Boltzmann samples while also giving a free energy value")
+        outputFile.close()
 
+    def fastaOutput(self):
+        print("outputting fasta file")
+        fastaFile = open("output.fa", "w")
+        fastaFile.write(">Toehold Switch \n")
+        fastaFile.write(f"{thsGen.bestThs.sequence} \n")
+        for i, j in enumerate(bestThsOrderedStrands):
+                if (i % 2 == 1):
+                    fastaFile.write(f'{"".join((">And gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))} \n')
+                    fastaFile.write(f"{j} \n")
+        fastaFile.close()
 
-    addButton = Button(text = "Add miRNA")
+    
 class mirBaseWindow(Screen):
 
     global names, sequences
@@ -272,9 +297,7 @@ class mirBaseWindow(Screen):
                     button.disabled = False
             
             del names[(len(names) - 1) - int(selfIdx/2)]
-            del sequences[(len(names) - 1) - int(selfIdx/2)]
-
-            
+            del sequences[(len(names) - 1) - int(selfIdx/2)]            
 
         def addmiRNA(self):
             print("adding miRNA")
@@ -285,15 +308,15 @@ class mirBaseWindow(Screen):
                 sequence = manager.get_screen("mirBaseWindow").ids.searchGrid.children[selfIdx + 1].text
                 names.append(name)
                 sequences.append(sequence.strip())
-                manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.add_widget(Label(text = name, size_hint = (0.75, 1/3)))
-                manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.add_widget(Button(text = "remove", font_size = 12, size_hint = (0.25, 1/3), on_press = removemiRNA))
+                manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.add_widget(Label(text = name, size_hint = (0.7, 1/3)))
+                manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.add_widget(Button(text = "remove", font_size = 12, size_hint = (0.2, 1/3), on_press = removemiRNA))
+                manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.add_widget(CheckBox(size_hint = (0.1, 1/3)))
                 
             else:
                 manager.get_screen("mirBaseWindow").ids.mirnaSelectText.text = "> 3 miRNA is not supported" 
         
         if self.children[0].children[-1].children[1].text:
             print("searching for miRNA")
-            # print(self.children[0].children[-1].children[1].text)
             miRBase = open("mature.fa")
             query = self.children[0].children[-1].children[1].text
             for i, x in enumerate(miRBase.readlines()):
@@ -319,6 +342,18 @@ class mirBaseWindow(Screen):
             print("submitting miRNA")
             print(names)
             print(sequences)
+
+            reverseList = []
+
+            for i, child in enumerate(self.manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children):
+                if i % 3 == 0:
+                    reverseList.append(child.active)
+
+            for i, val in enumerate(reverseList):
+                if val:
+                    sequences[i] = thsGen.reverse(sequences[i])
+                    print("reversing")
+
             self.ids.mirBaseSubmitButton.disabled = True
             submitDict = dict(zip(names, sequences))  
             thsGen.miRNADict = submitDict
