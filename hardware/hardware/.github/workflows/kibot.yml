@@ -1,0 +1,40 @@
+name: KiBot
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - '**.kicad_sch'
+    - '**.kicad_pcb'
+  pull_request:
+    paths:
+      - '**.kicad_sch'
+      - '**.kicad_pcb'
+
+jobs:
+  kibot:
+    name: genoswitch-rp2040
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all branches and tags
+      
+      - uses: INTI-CMNB/KiBot@v2_k7
+        with:
+          # Required - kibot config file
+          config: kibot_generated.kibot.yaml
+          # optional - prefix to output defined in config
+          dir: output
+          # optional - schematic file
+          schema: 'genoswitch-rp2040/genoswitch-rp2040.kicad_sch'
+          # optional - PCB design file
+          board: 'genoswitch-rp2040/genoswitch-rp2040.kicad_pcb'
+      - name: upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output
