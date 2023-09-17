@@ -45,6 +45,135 @@ def strucShow(self):
     App.get_running_app().root.get_screen("strucShowWindow").ids.strucLabel.text = f"polymer graph visual for: {self.text}"
     App.get_running_app().root.get_screen("strucShowWindow").ids.strucShowBox.add_widget(Image(source = f"struc_{fileName}.png", size_hint = (1, 1), allow_stretch = True))
 
+class fileManager(Screen):
+
+    names = []
+    sequences = []
+
+    def submitFromFasta(self):    
+        if self.manager.get_screen("fileManager").ids.fastaSelectBox.children:
+            print("submitting miRNA")
+            print(names)
+            print(sequences)
+
+            reverseList = []
+
+            for i, child in enumerate(self.manager.get_screen("fileManager").ids.fastaSelectBox.children):
+                if i % 3 == 0:
+                    reverseList.append(child.active)
+
+            for i, val in enumerate(reverseList):
+                if val:
+                    sequences[i] = thsGen.reverse(sequences[i])
+                    print("reversing")
+
+            self.ids.fastaSubmitButton.disabled = True
+            submitDict = dict(zip(names, sequences))  
+            thsGen.miRNADict = submitDict
+            print(thsGen.miRNADict)
+            thsGen.start()
+            thsGen.thsPlotSave()
+            thsGen.triggerPlotSave()
+            thsGen.complexPlotSave()
+            self.ids.nextButton3.disabled = False
+            ev.dispatch("on_thsGen")
+        else:
+            print("input something, dingus")
+
+    def selected(self, fileName):
+
+        global manager
+        manager = self.manager
+
+        self.ids.fastaSearchGrid.clear_widgets()
+
+        def removemiRNA(self):
+            print("removing miRNA")
+            selfIdx = manager.get_screen("fileManager").ids.fastaSelectBox.children.index(self)
+            buttonList = manager.get_screen("fileManager").ids.fastaSearchGrid.children[0::3]
+            labelList = [x.text for x in manager.get_screen("fileManager").ids.fastaSearchGrid.children[2::3]]
+
+            name = manager.get_screen("fileManager").ids.fastaSelectBox.children[selfIdx + 1].text
+
+            findButtonIdx = labelList.index(name)
+
+            buttonList[findButtonIdx].disabled = False  
+
+            manager.get_screen("fileManager").ids.fastaSelectBox.remove_widget(manager.get_screen("fileManager").ids.fastaSelectBox.children[selfIdx])
+            manager.get_screen("fileManager").ids.fastaSelectBox.remove_widget(manager.get_screen("fileManager").ids.fastaSelectBox.children[selfIdx])
+            manager.get_screen("fileManager").ids.fastaSelectBox.remove_widget(manager.get_screen("fileManager").ids.fastaSelectBox.children[selfIdx - 1])
+
+            delIdx = names.index(name)
+
+            del names[delIdx]
+            del sequences[delIdx]   
+
+        def addmiRNA(self):
+            print("adding miRNA")
+            if len(names) < 3:
+                self.disabled = True
+                selfIdx = manager.get_screen("fileManager").ids.fastaSearchGrid.children.index(self)
+                name = manager.get_screen("fileManager").ids.fastaSearchGrid.children[selfIdx + 2].text
+                sequence = manager.get_screen("fileManager").ids.fastaSearchGrid.children[selfIdx + 1].text
+                names.append(name)
+                sequences.append(sequence.strip())
+                manager.get_screen("fileManager").ids.fastaSelectBox.add_widget(Label(text = name, size_hint = (0.7, 1/3)))
+                manager.get_screen("fileManager").ids.fastaSelectBox.add_widget(Button(text = "remove", font_size = 12, size_hint = (0.2, 1/3), on_press = removemiRNA))
+                manager.get_screen("fileManager").ids.fastaSelectBox.add_widget(CheckBox(size_hint = (0.1, 1/3)))
+                
+            else:
+                manager.get_screen("fileManager").ids.fastaSelectText.text = "> 3 miRNA is not supported" 
+            
+            print(names)
+            print(sequences)
+
+        print(fileName[0])
+        if str(fileName[0].split("/")[-1]).endswith('.fa'):
+            with open(fileName[0], "r") as file:
+                print(len(file.readlines()))
+                print(set([x.strip() for x in open(fileName[0], "r").readlines()]))
+                print([x.strip() for x in open(fileName[0], "r").readlines()])
+                if len(set([x.strip() for x in open(fileName[0], "r").readlines()])) == len([x.strip() for x in open(fileName[0], "r").readlines()]):    
+                    print("no repeats detected")
+                    if len(open(fileName[0], "r").readlines()) % 2 == 0 and len(open(fileName[0], "r").readlines()) < 7:
+                        print("correct number of lines")
+                        if all([x.startswith(">") for x in open(fileName[0], "r").readlines()[::2]]):
+                            print("all name lines begin with >")
+                            if all(thsGen.checkCorrectCharacters(x.strip()) and len(x) > 14 and len(x) < 30 for x in open(fileName[0], "r").readlines()[1::2]):
+                                print("sequences correct")
+                                for line in open(fileName[0], "r").readlines():
+                                    if line.startswith(">"): 
+                                        self.ids.fastaSearchGrid.add_widget(Label(text = line[1::].strip(), size_hint_y = None, size = (10, 20), size_hint = (0.3, None)))
+                                    else:
+                                        self.ids.fastaSearchGrid.add_widget(Label(text = line.strip(), size_hint_y = None, size = (10, 20), size_hint = (0.7, None)))
+                                        self.ids.fastaSearchGrid.add_widget(Button(text = "Add miRNA", size = (10, 50),  size_hint = (0.2, None), on_press = addmiRNA))
+                            else:
+                                print("sequences contain illegal characters")
+                        else:
+                            print("error in name lines")
+                    else:
+                        print("wrong number of lines")                
+                else:
+                    print("no bueno")
+        
+        print(sequences)
+        buttons = []
+        text = []
+        print(manager.get_screen("fileManager").ids.fastaSearchGrid.children)
+        for x in manager.get_screen("fileManager").ids.fastaSearchGrid.children[0::3]:
+            print(x.text)
+            buttons.append(x)
+        for x in manager.get_screen("fileManager").ids.fastaSearchGrid.children[1::3]:
+            print(x.text)
+            text.append(x)
+
+        print(buttons)
+        print(text)
+
+        for sequence in sequences:
+            for (label, button) in zip(text, buttons):
+                if sequence == label.text:
+                    button.disabled = True
 
 class strucShowScreen(Screen):
     pass
@@ -58,11 +187,11 @@ class mainWindow(Screen):
         print("miRNA added")
 
         if len(self.children[0].children[1].children) != 9:
-            self.ids.inputGrid.add_widget(TextInput(multiline = False, font_size = 18))
+            self.ids.inputGrid.add_widget(TextInput(multiline = False, size_hint_x = 0.3, font_size = 18, size_hint_y = None, height = 45))
 
-            self.ids.inputGrid.add_widget(TextInput(multiline = False, font_size = 18))
+            self.ids.inputGrid.add_widget(TextInput(multiline = False, size_hint_x = 0.5, font_size = 18, size_hint_y = None, height = 45))
 
-            self.ids.inputGrid.add_widget(CheckBox())
+            self.ids.inputGrid.add_widget(CheckBox(size_hint_x = 0.2, size_hint_y = None, height = 45))
             
 
         else:
@@ -82,6 +211,10 @@ class mainWindow(Screen):
         with open("mature.fa", 'wb') as f:
             f.write(requests.get("https://mirbase.org/download/mature.fa").content)
         self.manager.current = "mirBaseWindow"
+
+    def browseFasta(self):
+        print("opening file manager")
+        self.manager.current = "fileManager"
 
     def clear(self):
         for i, child in enumerate(self.children[0].children[1].children):
@@ -219,43 +352,62 @@ class triggerWindow(Screen):
 class complexWindow(Screen):
 
     def resultsOutput(self):
-        print("outputting txt file")
-        outputFile = open("results.txt","w")
-        outputFile.write("~~~~~~~~~~~~~~~~~Toehold Switch~~~~~~~~~~~~~~~~~ \n")
-        outputFile.write(f"{thsGen.bestThs.sequence} \n")
-        outputFile.write(f"MFE structure: {thsGen.bestThs.strucEnergy.structure} ({str(round(thsGen.bestThs.strucEnergy.energy, 2))} kcal/mol) with a toehold exposure of {str(round(thsGen.bestThs.exposure, 2))}% \n")
-        outputFile.write(f"Boltzmann sampled structures: \n")
-        for x in thsGen.bestThs.thsSamples:
-            outputFile.write(f"{x} \n")
-        outputFile.write("\n ~~~~~~~~~~~~~~~~~Trigger Complex~~~~~~~~~~~~~~~~~ \n")
-        if thsGen.numMiRNA == 1:
-            outputFile.write("There is no trigger complex for a toehold switch using 1 miRNA")
-            for i, j in enumerate(bestThsOrderedStrands):
-                if (i % 2 == 1):
-                    outputFile.write(f'{"".join((j, " is the and gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))}')
-        
+        if thsGen.numMiRNA > 1:
+            print("outputting txt file")
+            outputFile = open("results.txt","w")
+            outputFile.write("~~~~~~~~~~~~~~~~~Toehold Switch~~~~~~~~~~~~~~~~~ \n")
+            outputFile.write(f"{thsGen.bestThs.sequence} \n")
+            outputFile.write(f"MFE structure: {thsGen.bestThs.strucEnergy.structure} ({str(round(thsGen.bestThs.strucEnergy.energy, 2))} kcal/mol) with a toehold exposure of {str(round(thsGen.bestThs.exposure, 2))}% \n")
+            outputFile.write(f"Boltzmann sampled structures: \n")
+            for x in thsGen.bestThs.thsSamples:
+                outputFile.write(f"{x} \n")
+            outputFile.write("\n ~~~~~~~~~~~~~~~~~Trigger Complex~~~~~~~~~~~~~~~~~ \n")
+            if thsGen.numMiRNA == 1:
+                outputFile.write("There is no trigger complex for a toehold switch using 1 miRNA")
+                for i, j in enumerate(bestThsOrderedStrands):
+                    if (i % 2 == 1):
+                        outputFile.write(f'{"".join((j, " is the and gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))}')
+            
+            else:
+                outputFile.write(f"Best strand order including and gate sequences: {', '.join(bestThsOrderedStrands)} \n")
+                outputFile.write(f"Structure considering Boltzmann sampled structures: {thsGen.bestThs.triggerStruc} \n")
+                outputFile.write(f"Structure considering MFE structure: {thsGen.triggerMFEStruc.structure} ({round(thsGen.triggerMFEStruc.energy, 2)} kcal/mol) \n")
+                for i, j in enumerate(bestThsOrderedStrands):
+                    if (i % 2 == 1):
+                        outputFile.write(f'{"".join((j, " is the and gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))} \n')
+                outputFile.write("With these other possible structures*: \n")
+            for x in thsGen.bestThs.triggerSamples:
+                outputFile.write(f"{str(x)} \n")
+            outputFile.write(f"*Several trigger Boltzmann samples are given in this file because the trigger structure tends to be much more volitile and subject to forming off-target complexes so 50 of the samples are shown here to assess how likely it is for the correct complex to form \n")
+            outputFile.write(f"*MFE structure may not be fully representative of the trigger complex's structure, which is why Boltzmann samples are taken. If the MFE structure closely resembles the boltzmann sampled ones, it is extremely likely to form, if not it will still be possible although at lower concentrations \n")
+            outputFile.write(f"*Boltzmann samples will be more reliable and representative of in vitro reactions as hundreds of samples are taken, MFE structure is only taken into account to give an approximate free energy value and equilibrium pair probability matrix \n")
+            outputFile.write("\n ~~~~~~~~~~~~~~~~~Activated Toehold Switch~~~~~~~~~~~~~~~~~ \n")
+            outputFile.write(f"MFE structure: {thsGen.finalComplex.mfe[0].structure} ({round(thsGen.finalComplex.mfe[0].energy, 2)} kcal/mol) \n")
+            outputFile.write(f"Toehold switch activation percentage: {round(100-bindingSites.count('.')*100/len(bindingSites), 2)}% \n")
+            outputFile.write("Suboptimal energy structures: \n")
+            for x in thsGen.finalComplex.subopt:
+                outputFile.write(f"{x.structure} ({round(x.energy, 2)} kcal/mol) \n")
+            outputFile.write("Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open")
+            outputFile.write("Here suboptimal energy structures are used as they are incredibly similar to taking Boltzmann samples while also giving a free energy value")
+            outputFile.close()
         else:
-            outputFile.write(f"Best strand order including and gate sequences: {', '.join(bestThsOrderedStrands)} \n")
-            outputFile.write(f"Structure considering Boltzmann sampled structures: {thsGen.bestThs.triggerStruc} \n")
-            outputFile.write(f"Structure considering MFE structure: {thsGen.triggerMFEStruc.structure} ({round(thsGen.triggerMFEStruc.energy, 2)} kcal/mol) \n")
-            for i, j in enumerate(bestThsOrderedStrands):
-                if (i % 2 == 1):
-                    outputFile.write(f'{"".join((j, " is the and gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))} \n')
-            outputFile.write("With these other possible structures*: \n")
-        for x in thsGen.bestThs.triggerSamples:
-            outputFile.write(f"{str(x)} \n")
-        outputFile.write(f"*Several trigger Boltzmann samples are given in this file because the trigger structure tends to be much more volitile and subject to forming off-target complexes so 50 of the samples are shown here to assess how likely it is for the correct complex to form \n")
-        outputFile.write(f"*MFE structure may not be fully representative of the trigger complex's structure, which is why Boltzmann samples are taken. If the MFE structure closely resembles the boltzmann sampled ones, it is extremely likely to form, if not it will still be possible although at lower concentrations \n")
-        outputFile.write(f"*Boltzmann samples will be more reliable and representative of in vitro reactions as hundreds of samples are taken, MFE structure is only taken into account to give an approximate free energy value and equilibrium pair probability matrix \n")
-        outputFile.write("\n ~~~~~~~~~~~~~~~~~Activated Toehold Switch~~~~~~~~~~~~~~~~~ \n")
-        outputFile.write(f"MFE structure: {thsGen.finalComplex.mfe[0].structure} ({round(thsGen.finalComplex.mfe[0].energy, 2)} kcal/mol) \n")
-        outputFile.write(f"Toehold switch activation percentage: {round(100-bindingSites.count('.')*100/len(bindingSites), 2)}% \n")
-        outputFile.write("Suboptimal energy structures: \n")
-        for x in thsGen.finalComplex.subopt:
-            outputFile.write(f"{x.structure} ({round(x.energy, 2)} kcal/mol) \n")
-        outputFile.write("Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open")
-        outputFile.write("Here suboptimal energy structures are used as they are incredibly similar to taking Boltzmann samples while also giving a free energy value")
-        outputFile.close()
+            outputFile = open("results.txt","w")
+            outputFile.write("~~~~~~~~~~~~~~~~~Toehold Switch~~~~~~~~~~~~~~~~~ \n")
+            outputFile.write(f"{thsGen.bestThs.sequence} \n")
+            outputFile.write(f"MFE structure: {thsGen.bestThs.strucEnergy.structure} ({str(round(thsGen.bestThs.strucEnergy.energy, 2))} kcal/mol) with a toehold exposure of {str(round(thsGen.bestThs.exposure, 2))}% \n")
+            outputFile.write(f"Boltzmann sampled structures: \n")
+            for x in thsGen.bestThs.thsSamples:
+                outputFile.write(f"{x} \n")
+            outputFile.write("\n ~~~~~~~~~~~~~~~~~Activated Toehold Switch~~~~~~~~~~~~~~~~~ \n")
+            outputFile.write(f"MFE structure: {thsGen.finalComplex.mfe[0].structure} ({round(thsGen.finalComplex.mfe[0].energy, 2)} kcal/mol) \n")
+            outputFile.write(f"Toehold switch activation percentage: {round(100-bindingSites.count('.')*100/len(bindingSites), 2)}% \n")
+            outputFile.write("Suboptimal energy structures: \n")
+            for x in thsGen.finalComplex.subopt:
+                outputFile.write(f"{x.structure} ({round(x.energy, 2)} kcal/mol) \n")
+            outputFile.write("Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open")
+            outputFile.write("Here suboptimal energy structures are used as they are incredibly similar to taking Boltzmann samples while also giving a free energy value")
+            outputFile.close()
+
 
     def fastaOutput(self):
         print("outputting fasta file")
@@ -287,17 +439,31 @@ class mirBaseWindow(Screen):
         def removemiRNA(self):
             print("removing miRNA")
             selfIdx = manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children.index(self)
+            buttonList = manager.get_screen("mirBaseWindow").ids.searchGrid.children[0::4]
+            labelList = [x.text for x in manager.get_screen("mirBaseWindow").ids.searchGrid.children[3::4]]
+
+            name = manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children[selfIdx + 1].text
+
+            findButtonIdx = labelList.index(name)
+
+            buttonList[findButtonIdx].disabled = False  
 
             manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.remove_widget(manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children[selfIdx])
             manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.remove_widget(manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children[selfIdx])
+            manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.remove_widget(manager.get_screen("mirBaseWindow").ids.mirnaSelectBox.children[selfIdx - 1])
 
             print(names)
-            for (label, button) in zip([x.text for x in manager.get_screen("mirBaseWindow").ids.searchGrid.children[3::4]], manager.get_screen("mirBaseWindow").ids.searchGrid.children[0::4]):
-                if label == names[(len(names) - 1) - int(selfIdx/2)]:
-                    button.disabled = False
-            
-            del names[(len(names) - 1) - int(selfIdx/2)]
-            del sequences[(len(names) - 1) - int(selfIdx/2)]            
+            print(sequences)
+
+            print(names.index(name))
+
+            delIdx = names.index(name)
+
+            del names[delIdx]
+            del sequences[delIdx]  
+
+            print(names)
+            print(sequences)
 
         def addmiRNA(self):
             print("adding miRNA")
@@ -380,6 +546,7 @@ class ToeholdSwitchGenerator(App):
         sm.add_widget(complexWindow())
         sm.add_widget(mirBaseWindow())
         sm.add_widget(strucShowScreen())
+        sm.add_widget(fileManager())
 
         return sm
 

@@ -554,7 +554,7 @@ def start():
         print("miRNA: ", miRNA)
         print(ths)
         thsStrand = Strand(ths, name="ths")
-        miRNAStrand = Strand(miRNA, name="miRNA")
+        miRNAStrand = Strand(reverse(miRNA), name="miRNA")
 
         tube = Tube(strands = {thsStrand:1e-5}, complexes=SetSpec(max_size = 1), name="thsTube")
         tubeResult = tube_analysis(tubes = [tube], compute = ["pairs", "mfe"], model=thsModel)
