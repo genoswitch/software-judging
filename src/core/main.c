@@ -26,6 +26,7 @@
 #include "git.h"
 
 #include "mcp3008/mcp3008.h"
+#include "mcp3008/pio/mcp3008_pio.h"
 
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 
@@ -88,15 +89,18 @@ int main(void)
     spi_pinout_t pinout = {
         .sck = 2,
         .csn = 5,
-        .rx = 4,
-        .tx = 3,
+        .miso = 4,
+        .mosi = 3,
     };
 
-    spi_dual_inst inst = mcp3008_init_hardware(spi, 3600000, &pinout);
-    // true/false has no effect
-    uint16_t res = mcp3008_internal_do_adc(&inst, 1, false);
+    // spi_dual_inst inst = mcp3008_init_hardware(spi, 3600000, &pinout);
+    //   true/false has no effect
+    // uint16_t res = mcp3008_internal_do_adc(&inst, 1, false);
 
-    printf("\n%x", res);
+    spi_dual_inst inst = mcp3008_init_pio(pio0, 3600000, &pinout);
+    uint16_t res = mcp3008_pio_read(&inst, 1, false);
+
+    printf("\nDATA: %x", res);
 
     // TinyUSB demos call this after creating tasks.
     vTaskStartScheduler();
