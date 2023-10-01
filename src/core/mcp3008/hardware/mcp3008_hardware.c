@@ -1,7 +1,5 @@
-#include "mcp3008.h"
 
-// gpio_set_function
-#include "pico/stdlib.h"
+#include "mcp3008_hardware.h"
 
 spi_dual_inst mcp3008_init_hardware(spi_inst_t *spi, uint baudrate, spi_pinout_t *pinout)
 {
@@ -35,14 +33,13 @@ spi_dual_inst mcp3008_init_hardware(spi_inst_t *spi, uint baudrate, spi_pinout_t
 }
 
 // -- Internal function to handle sending data --
-#define OUTPUT_BUFFER_LEN 3
-uint16_t mcp3008_internal_do_adc(spi_dual_inst *inst, uint8_t channel, bool differential)
+uint16_t mcp3008_read_hardware(spi_dual_inst *inst, uint8_t channel, bool differential)
 {
     if (inst->isHw)
     {
         // Create a buffer to sent to the device initialised to zero
-        uint8_t output_buffer[OUTPUT_BUFFER_LEN];
-        for (uint8_t i = 0; i < OUTPUT_BUFFER_LEN; i++)
+        uint8_t output_buffer[BUF_LEN];
+        for (uint8_t i = 0; i < BUF_LEN; i++)
         {
             output_buffer[i] = 0;
         }
@@ -69,12 +66,6 @@ uint16_t mcp3008_internal_do_adc(spi_dual_inst *inst, uint8_t channel, bool diff
         spi_write_read_blocking(spi0, output_buffer, input_buffer, BUF_LEN);
         gpio_put(5, 1);
 
-        printf("RECIEVED DATA");
-
-        uint16_t data = (((uint16_t)(input_buffer[1] & 0x03)) << 8) | input_buffer[2];
-
-        return data;
-
         // Response
         // 13 bits garbage
         // 1 bit null (0)
@@ -82,6 +73,7 @@ uint16_t mcp3008_internal_do_adc(spi_dual_inst *inst, uint8_t channel, bool diff
         // mask 0x07 last 3 bits
         // mask 0x03 last 2 bits
         // return (((uint16_t)(input_buffer[1] & 0x03)) << 8) | input_buffer[2];
+        return (((uint16_t)(input_buffer[1] & 0x03)) << 8) | input_buffer[2];
     }
     else
     {

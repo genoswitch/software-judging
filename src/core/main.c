@@ -98,7 +98,7 @@ int main(void)
     // uint16_t res = mcp3008_internal_do_adc(&inst, 1, false);
 
     spi_dual_inst inst = mcp3008_init_pio(pio0, 3600000, &pinout);
-    uint16_t res = mcp3008_pio_read(&inst, 1, false);
+    uint16_t res = mcp3008_read_pio(&inst, 1, false);
 
     printf("\nDATA: %x", res);
 

@@ -7,6 +7,6 @@
 #include "../mcp3008.h"
 
 spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout);
-uint16_t mcp3008_pio_read(spi_dual_inst *inst, uint8_t channel, bool differential);
+uint16_t mcp3008_read_pio(spi_dual_inst *inst, uint8_t channel, bool differential);
 
 #endif /* MCP3008_PIO_H_ */
