@@ -10,28 +10,19 @@ spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout)
     float clkdiv = 31.25f; // 1 MHz @ 125 clk_sys
 
     uint cpha0_prog_offs = pio_add_program(spi.pio, &spi_cpha0_program);
-    uint cpha1_prog_offs = pio_add_program(spi.pio, &spi_cpha1_program);
 
-    for (int cpha = 0; cpha <= 1; ++cpha)
-    {
-        for (int cpol = 0; cpol <= 1; ++cpol)
-        {
-            printf("\nINIT CPHA = %d, CPOL = %d", cpha, cpol);
-            pio_spi_init(
-                spi.pio,                                  // pio
-                spi.sm,                                   // state machine (num)
-                cpha ? cpha1_prog_offs : cpha0_prog_offs, // program offsets
-                8,                                        // number of bits per SPI frame
-                clkdiv,                                   // Clock divider
-                cpha,
-                cpol,
-                pinout->sck,  // SCK pin,
-                pinout->mosi, // MOSI pin
-                pinout->miso  // MISO pin
-            );
-        }
-    }
-    printf("PIO Init Done!\n");
+    pio_spi_init(
+        spi.pio,         // pio
+        spi.sm,          // state machine (num)
+        cpha0_prog_offs, // program offsets
+        8,               // number of bits per SPI frame
+        clkdiv,          // Clock divider
+        0,               // cpha
+        1,               // cpol
+        pinout->sck,     // SCK pin,
+        pinout->mosi,    // MOSI pin
+        pinout->miso     // MISO pin
+    );
 
     // Setup CS pin
     gpio_init(pinout->csn);
@@ -50,8 +41,6 @@ spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout)
     {
         inst.input_buffer[i] = 0;
     }
-
-    printf("All done!");
 
     return inst;
 }
