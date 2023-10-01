@@ -19,9 +19,9 @@ spi_dual_inst mcp3008_init_hardware(spi_inst_t *spi, uint baudrate, spi_pinout_t
     gpio_set_function(inst.pinout->mosi, GPIO_FUNC_SPI);
     // gpio_set_function(5, GPIO_FUNC_SPI);
 
-    gpio_init(5);
-    gpio_set_dir(5, GPIO_OUT);
-    gpio_put(5, 1);
+    gpio_init(inst.pinout->csn);
+    gpio_set_dir(inst.pinout->csn, GPIO_OUT);
+    gpio_put(inst.pinout->csn, 1);
 
     // Create an input buffer and initialise it to zero.
     for (uint8_t i = 0; i < BUF_LEN; i++)
@@ -62,9 +62,9 @@ uint16_t mcp3008_read_hardware(spi_dual_inst *inst, uint8_t channel, bool differ
 
         // Send the SPI command
 
-        gpio_put(5, 0);
-        spi_write_read_blocking(spi0, output_buffer, input_buffer, BUF_LEN);
-        gpio_put(5, 1);
+        gpio_put(inst->pinout->csn, 0);
+        spi_write_read_blocking(inst->spi_hw, output_buffer, input_buffer, BUF_LEN);
+        gpio_put(inst->pinout->csn, 1);
 
         // Response
         // 13 bits garbage
