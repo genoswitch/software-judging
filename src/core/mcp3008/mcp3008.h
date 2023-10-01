@@ -1,5 +1,5 @@
-#ifndef MCP3008_H_
-#define MCP3008_H_
+#ifndef MCP3008_MCP3008_H_
+#define MCP3008_MCP3008_H_
 
 #include "hardware/spi.h"
 #include "pio/pio_spi.h"
@@ -19,4 +19,4 @@ typedef struct
     bool isHw;
 } spi_dual_inst;
 
-#endif /* MCP3008_H_ */
+#endif /* MCP3008_MCP3008_H_ */

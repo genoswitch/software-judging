@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-#ifndef _PIO_SPI_H
-#define _PIO_SPI_H
+#ifndef PIO_PIO_SPI_H_
+#define PIO_PIO_SPI_H_
 
 #include "hardware/pio.h"
 #include "spi.pio.h"
@@ -22,4 +22,4 @@ void pio_spi_read8_blocking(const pio_spi_inst_t *spi, uint8_t *dst, size_t len)
 
 void pio_spi_write8_read8_blocking(const pio_spi_inst_t *spi, uint8_t *src, uint8_t *dst, size_t len);
 
-#endif
+#endif /* PIO_PIO_SPI_H_ */

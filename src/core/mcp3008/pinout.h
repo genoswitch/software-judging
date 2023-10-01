@@ -1,5 +1,5 @@
-#ifndef PINOUT_H_
-#define PINOUT_H_
+#ifndef MCP3008_PINOUT_H_
+#define MCP3008_PINOUT_H_
 
 typedef struct TU_ATTR_PACKED
 {
@@ -9,4 +9,4 @@ typedef struct TU_ATTR_PACKED
     int csn;
 } spi_pinout_t;
 
-#endif /* PINOUT_H_ */
+#endif /* MCP3008_PINOUT_H_ */
