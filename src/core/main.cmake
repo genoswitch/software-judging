@@ -43,6 +43,7 @@ target_sources(${MAIN} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/bulk.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/mcu_temperature.c
+    ${CMAKE_CURRENT_LIST_DIR}/mcp3008/mcp3008.c
     ${CMAKE_CURRENT_LIST_DIR}/config.h
     )
 
@@ -51,7 +52,7 @@ target_sources(${MAIN} PUBLIC
 # pico_malloc, pico_mem_ops - optimized versions of standard libraries.
 # memory management: FreeRTOS-Kernel-Heap# required for pvPortMalloc
 # tinyusb_device tinyusb_board (https://github.com/raspberrypi/pico-examples/blob/master/usb/device/dev_hid_composite/CMakeLists.txt)
-target_link_libraries(${MAIN} pico_stdlib pico_malloc pico_mem_ops hardware_adc pico_unique_id FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board cmake_git_version_tracking)
+target_link_libraries(${MAIN} hardware_spi pico_stdlib pico_malloc pico_mem_ops hardware_adc pico_unique_id FreeRTOS-Kernel FreeRTOS-Kernel-Heap4 tinyusb_device tinyusb_board cmake_git_version_tracking)
 
 # stdio only on UART (UART0 by default, pins 1 and 2)
 pico_enable_stdio_usb(${MAIN} 0)

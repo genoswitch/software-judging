@@ -25,6 +25,8 @@
 // Source control information embedded at build-time
 #include "git.h"
 
+#include "mcp3008/mcp3008.h"
+
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 
 #ifdef INCLUDES_FLASHLOADER
@@ -77,6 +79,24 @@ int main(void)
 #ifdef INCLUDES_FLASHLOADER
     pvRegisterFlashloaderTask();
 #endif
+
+    printf("HELLO, world!");
+
+    spi_inst_t *spi = spi0;
+
+    // TODO: fix schematic pinout (HW_SPI0)
+    spi_pinout_t pinout = {
+        .sck = 2,
+        .csn = 5,
+        .rx = 4,
+        .tx = 3,
+    };
+
+    spi_dual_inst inst = mcp3008_init_hardware(spi, 3600000, &pinout);
+    // true/false has no effect
+    uint16_t res = mcp3008_internal_do_adc(&inst, 1, false);
+
+    printf("\n%x", res);
 
     // TinyUSB demos call this after creating tasks.
     vTaskStartScheduler();
