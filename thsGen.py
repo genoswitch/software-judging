@@ -609,6 +609,11 @@ def getKey(val):
 # The 3 functions below are just used in jupyter lab to display the switches and graphs     
     
 def thsPlotSave():
+    plt.figure(facecolor='#0a1628')
+    plt.rcParams['text.color'] = "#ffffff"
+    plt.rcParams['axes.labelcolor'] = "#ffffff"
+    plt.rcParams['xtick.color'] = "#ffffff"
+    plt.rcParams['ytick.color'] = "#ffffff"
     thsPairs = pairs(strands=[str(bestThs.sequence)], model=thsModel)
     plt.imshow(thsPairs.to_array())
     plt.xlabel("Base index")
@@ -631,6 +636,11 @@ def thsDisplay():
     thsPlotSave()
 
 def triggerPlotSave():
+    plt.figure(facecolor='#0a1628')
+    plt.rcParams['text.color'] = "#ffffff"
+    plt.rcParams['axes.labelcolor'] = "#ffffff"
+    plt.rcParams['xtick.color'] = "#ffffff"
+    plt.rcParams['ytick.color'] = "#ffffff"
     bestThsOrderedStrands = listAddition(bestThs.strandsUsed[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])
     triggerPairs = pairs(strands=bestThsOrderedStrands, model=thsModel)
     print("equilibrium probability pair matrix for trigger complex: ")
@@ -640,7 +650,7 @@ def triggerPlotSave():
     plt.title("Pair probabilities for trigger complex MFE")
     print("*MFE structure may not be fully representative of the trigger complex's structure, which is why Boltzmann samples are taken. If the MFE structure closely resembles the boltzmann sampled ones, it is extremely likely to form, if not it will still be possible although at lower concentrations")
     print("*Boltzmann samples will be more reliable and representative of in vitro reactions as hundreds of samples are taken, MFE structure is only taken into account to give an approximate free energy value and equilibrium pair probability matrix")
-    # plt.colorbar()
+    plt.colorbar()
     plt.clim(0, 1)
     plt.savefig('trigger.png')   
 
@@ -649,7 +659,7 @@ def triggerDisplay():
     bestThsOrderedStrands = listAddition(bestThs.strandsUsed[0:int((len(strands)-1)/2)], strands[int((len(strands)-1)/2):int(len(strands))])
     triggerMFE = mfe(strands=bestThsOrderedStrands, model=thsModel)
     triggerMFEStruc = triggerMFE[0]
-    print("trigger complex strand order and structure: ")
+    print("trigger complex strand order and structure: ") 
     print(bestThsOrderedStrands)
     print("By considering Boltzmann samples: ", bestThs.triggerStruc)
     print("By considering MFE structure: ", str(triggerMFEStruc.structure), " Free energy: ", str(round(triggerMFEStruc.energy, 2)), " (kcal/nol)")
@@ -662,11 +672,16 @@ def triggerDisplay():
     triggerPlotSave()
 
 def complexPlotSave():
+    plt.figure(facecolor='#0a1628')
+    plt.rcParams['text.color'] = "#ffffff"
+    plt.rcParams['axes.labelcolor'] = "#ffffff"
+    plt.rcParams['xtick.color'] = "#ffffff"
+    plt.rcParams['ytick.color'] = "#ffffff"
     plt.imshow(finalComplex.pairs.to_array())
     plt.xlabel("Base index")
     plt.ylabel("Base index")
     plt.title("Pair probabilities for activated toehold switch")
-    # plt.colorbar()
+    plt.colorbar()
     plt.clim(0, 1)
     plt.savefig('complex.png')
 

@@ -19,7 +19,7 @@ from kivy.event import EventDispatcher
 
 kv = Builder.load_file("thsGenerator.kv")
 
-Window.size = (1500,800)
+Window.size = (1500,900)
 
 class MyEventDispatcher(EventDispatcher):
     def __init__(self, **kwargs):
@@ -27,6 +27,9 @@ class MyEventDispatcher(EventDispatcher):
         super(MyEventDispatcher, self).__init__(**kwargs)
 
     def on_thsGen(self):
+        pass
+
+    def on_strucShowRequest(self):
         pass
     
 ev = MyEventDispatcher()
@@ -148,13 +151,15 @@ class fileManager(Screen):
                                         self.ids.fastaSearchGrid.add_widget(Label(text = line.strip(), size_hint_y = None, size = (10, 20), size_hint = (0.7, None)))
                                         self.ids.fastaSearchGrid.add_widget(Button(text = "Add miRNA", size = (10, 50),  size_hint = (0.2, None), on_press = addmiRNA))
                             else:
-                                print("sequences contain illegal characters")
+                                self.ids.fastaSearchGrid.add_widget(Label(text = "Invalid sequences"))
                         else:
-                            print("error in name lines")
+                            self.ids.fastaSearchGrid.add_widget(Label(text = "Invalid strand names"))
                     else:
-                        print("wrong number of lines")                
+                        self.ids.fastaSearchGrid.add_widget(Label(text = "Invalid file layout"))              
                 else:
-                    print("no bueno")
+                    self.ids.fastaSearchGrid.add_widget(Label(text = "Invalid file layout"))
+        else:
+            self.ids.fastaSearchGrid.add_widget(Label(text = "Invalid file type"))
         
         print(sequences)
         buttons = []
@@ -335,8 +340,8 @@ class mainWindow(Screen):
             bindingSites += bindingSite
         global thsActivationString
         thsActivationString = "".join(("Toehold switch activation percentage: ", str(round(100-bindingSites.count(".")*100/len(bindingSites), 2)), "%", " Approximate free energy of: ", str(round(thsGen.finalComplex.mfe[0].energy, 2)), " (kcal/mol)"))
-        complexGridText.add_widget(Label(text = thsActivationString))
-        complexGridText.add_widget(Label(text = "*Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open", text_size = ((Window.size[0] - 200)/2, 50), font_size = 12)) 
+        complexGridText.add_widget(Label(text = thsActivationString, text_size = (Window.size[0]/2, 30), size_hint_y = 0.75, font_size = 12))
+        complexGridText.add_widget(Label(text = "*Toehold switch activation percentage is a measure of how many bases of the switch bind at equilibrium when the switch is open, it isn't a representation of what percentage of switches will be open", size_hint_y = 0.5, font_size = 12, text_size = (Window.size[0]/2, 40))) 
 
     ev.bind(on_thsGen = received)
 
@@ -412,13 +417,17 @@ class complexWindow(Screen):
     def fastaOutput(self):
         print("outputting fasta file")
         fastaFile = open("output.fa", "w")
-        fastaFile.write(">Toehold Switch \n")
-        fastaFile.write(f"{thsGen.bestThs.sequence} \n")
-        for i, j in enumerate(bestThsOrderedStrands):
-                if (i % 2 == 1):
-                    fastaFile.write(f'{"".join((">And gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))} \n')
-                    fastaFile.write(f"{j} \n")
-        fastaFile.close()
+        if thsGen.numMiRNA > 1:
+            fastaFile.write(">Toehold Switch \n")
+            fastaFile.write(f"{thsGen.bestThs.sequence} \n")
+            for i, j in enumerate(bestThsOrderedStrands):
+                    if (i % 2 == 1):
+                        fastaFile.write(f'{"".join((">And gate between ", thsGen.getKey(bestThsOrderedStrands[i-1]), " (", bestThsOrderedStrands[i-1], ") ", " and ", thsGen.getKey(bestThsOrderedStrands[i+1]), " (", bestThsOrderedStrands[i+1], ") "))} \n')
+                        fastaFile.write(f"{j} \n")
+            fastaFile.close()
+        else:
+            fastaFile.write(">Toehold Switch \n")
+            fastaFile.write(f"{thsGen.bestThs.sequence} \n")
 
     
 class mirBaseWindow(Screen):
@@ -533,6 +542,9 @@ class mirBaseWindow(Screen):
         else:
             print("input something, dingus")
 
+class loadScreen(Screen):
+    pass
+
     
 class ToeholdSwitchGenerator(App):
 
@@ -547,6 +559,7 @@ class ToeholdSwitchGenerator(App):
         sm.add_widget(mirBaseWindow())
         sm.add_widget(strucShowScreen())
         sm.add_widget(fileManager())
+        sm.add_widget(loadScreen())
 
         return sm
 
