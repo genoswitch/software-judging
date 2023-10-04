@@ -45,7 +45,7 @@ target_sources(${MAIN} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/bulk.c
     ${CMAKE_CURRENT_LIST_DIR}/tasks/mcu_temperature.c
-    ${CMAKE_CURRENT_LIST_DIR}/mcp3008/mcp3008.h
+    ${CMAKE_CURRENT_LIST_DIR}/mcp3008/mcp3008.c
     ${CMAKE_CURRENT_LIST_DIR}/mcp3008/hardware/mcp3008_hardware.c
     ${CMAKE_CURRENT_LIST_DIR}/mcp3008/pio/mcp3008_pio.c
     ${CMAKE_CURRENT_LIST_DIR}/mcp3008/pio/pio_spi.c
