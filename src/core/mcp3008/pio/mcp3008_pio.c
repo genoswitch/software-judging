@@ -1,5 +1,8 @@
 #include "mcp3008_pio.h"
 
+// clk_sys enum
+#include "hardware/clocks.h"
+
 spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout)
 {
     pio_spi_inst_t spi = {
@@ -7,7 +10,10 @@ spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout)
         .sm = pio_claim_unused_sm(pio, true) // claim first free state machine
     };
 
-    float clkdiv = 31.25f; // 1 MHz @ 125 clk_sys
+    // Based on: https://medium.com/geekculture/raspberry-pico-programming-with-pio-state-machines-e4610e6b0f29
+    // *Should* make the spi clock speed correct.
+    float clock_divider = (float)clock_get_hz(clk_sys) / SPI_CLOCK_SPEED;
+    // float clkdiv = 31.25f; // 1 MHz @ 125 clk_sys
 
     uint cpha0_prog_offs = pio_add_program(spi.pio, &spi_cpha0_program);
 
@@ -16,7 +22,7 @@ spi_dual_inst mcp3008_init_pio(PIO pio, uint baudrate, spi_pinout_t *pinout)
         spi.sm,          // state machine (num)
         cpha0_prog_offs, // program offsets
         8,               // number of bits per SPI frame
-        clkdiv,          // Clock divider
+        clock_divider,   // Clock divider
         0,               // cpha
         1,               // cpol
         pinout->sck,     // SCK pin,
