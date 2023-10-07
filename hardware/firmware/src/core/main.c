@@ -25,6 +25,10 @@
 // Source control information embedded at build-time
 #include "git.h"
 
+#include "mcp3008/mcp3008.h"
+#include "mcp3008/pio/mcp3008_pio.h"
+#include "mcp3008/hardware/mcp3008_hardware.h"
+
 extern void *__BUILD_INCLUDES_FLASHLOADER;
 
 #ifdef INCLUDES_FLASHLOADER
@@ -77,6 +81,52 @@ int main(void)
 #ifdef INCLUDES_FLASHLOADER
     pvRegisterFlashloaderTask();
 #endif
+
+    printf("HELLO, world!");
+
+    spi_inst_t *spi = spi0;
+    spi_pinout_t pinout = {
+        .sck = 2,
+        .csn = 5,
+        .miso = 4,
+        .mosi = 3,
+    };
+    spi_dual_inst inst = mcp3008_init_hardware(spi, 3600000, &pinout);
+    int16_t res = mcp3008_read_hardware(&inst, 1, false);
+    printf("\nDATA HW_0: %x", res);
+
+    spi_inst_t *spi2 = spi1;
+    spi_pinout_t pinout2 = {
+        .sck = 10,
+        .csn = 9,
+        .miso = 8,
+        .mosi = 11,
+    };
+    spi_dual_inst inst2 = mcp3008_init_hardware(spi2, 3600000, &pinout2);
+    int16_t res2 = mcp3008_read_hardware(&inst2, 0, false);
+    printf("\nDATA HW_1: %x", res2);
+
+    spi_pinout_t pinout3 = {
+        .sck = 14,
+        .csn = 13,
+        .miso = 12,
+        .mosi = 15,
+    };
+    spi_dual_inst inst3 = mcp3008_init_pio(pio0, 3600000, &pinout3);
+    uint16_t res3 = mcp3008_read_pio(&inst3, 1, false);
+    printf("\nDATA PIO_0: %x", res3);
+
+    spi_pinout_t pinout4 = {
+        .sck = 18,
+        .csn = 17,
+        .miso = 16,
+        .mosi = 19,
+    };
+    spi_dual_inst inst4 = mcp3008_init_pio(pio1, 3600000, &pinout4);
+    uint16_t res4 = mcp3008_read_pio(&inst4, 1, false);
+    printf("\nDATA PIO_1: %x", res4);
+
+    printf("\n");
 
     // TinyUSB demos call this after creating tasks.
     vTaskStartScheduler();
