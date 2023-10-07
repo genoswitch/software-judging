@@ -67,10 +67,10 @@ uint16_t mcp3008_read_pio(spi_dual_inst *inst, uint8_t channel, bool differentia
         output_buffer[0] = 0x01;
 
         // Byte 2
-        // Bit 1, differential signal sleection
+        // Bit 1, differential signal selection
         // Bits 2-4 channel select
         // Rest of buffer ignored
-        output_buffer[1] = ((differential ? 0 : 1) >> 7 | channel << 4);
+        output_buffer[1] = ((differential ? 0 : 1) << 7 | channel << 4);
 
         // temp
         uint8_t input_buffer[BUF_LEN];

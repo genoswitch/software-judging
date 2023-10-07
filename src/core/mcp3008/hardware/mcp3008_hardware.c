@@ -48,10 +48,10 @@ uint16_t mcp3008_read_hardware(spi_dual_inst *inst, uint8_t channel, bool differ
         output_buffer[0] = 0x01;
 
         // Byte 2
-        // Bit 1, differential signal sleection
+        // Bit 1, differential signal selection
         // Bits 2-4 channel select
         // Rest of buffer ignored
-        output_buffer[1] = ((differential ? 0 : 1) >> 7 | channel << 4);
+        output_buffer[1] = ((differential ? 0 : 1) << 7 | channel << 4);
 
         // temp
         uint8_t input_buffer[BUF_LEN];
@@ -63,6 +63,7 @@ uint16_t mcp3008_read_hardware(spi_dual_inst *inst, uint8_t channel, bool differ
         // Send the SPI command
 
         gpio_put(inst->pinout->csn, 0);
+        __breakpoint();
         spi_write_read_blocking(inst->spi_hw, output_buffer, input_buffer, BUF_LEN);
         gpio_put(inst->pinout->csn, 1);
 
