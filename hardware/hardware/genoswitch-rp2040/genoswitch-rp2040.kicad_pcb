@@ -208,7 +208,7 @@
       (net 41 "/QSPI_SD3") (pinfunction "IO3") (pintype "bidirectional") (tstamp 31cf0e86-40ff-4398-bde6-b0700dcd3067))
     (pad "8" smd roundrect (at 3.6 -1.905 90) (size 1.6 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 5 "+3V3") (pinfunction "VCC") (pintype "power_in") (tstamp ee8b9201-2002-4e37-9a99-c2ec8bf7bb6e))
-    (model "${KICAD6_3DMODEL_DIR}/Package_SO.3dshapes/SOIC-8_5.23x5.23mm_P1.27mm.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Package_SO.3dshapes/SOIC-8_5.275x5.275mm_P1.27mm.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -2508,7 +2508,7 @@
       (net 2 "GND") (pinfunction "Shield") (pintype "passive") (tstamp f9ef8190-541f-4545-afd7-229d57109034))
     (pad "6" thru_hole oval (at 3.3 0 270) (size 1.6 0.9) (drill oval 1.2 0.5) (layers "*.Cu" "*.Mask" "F.Paste")
       (net 2 "GND") (pinfunction "Shield") (pintype "passive") (tstamp 781a000b-8b70-4296-a5de-797275d5e85c))
-    (model "${KICAD7_3DMODEL_DIR}/Connector_USB.3dshapes/USB_Micro-B_Amphenol_10118193-0001LF_Horizontal.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Connector_USB.3dshapes/USB_Micro-B_Molex_47346-0001.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
