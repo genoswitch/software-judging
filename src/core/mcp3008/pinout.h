@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef MCP3008_PINOUT_H_
 #define MCP3008_PINOUT_H_
 

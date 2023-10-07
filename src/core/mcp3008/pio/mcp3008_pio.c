@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "mcp3008_pio.h"
 
 // clk_sys enum

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 
 #include "mcp3008_hardware.h"
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef HARDWARE_MCP3008_HARDWARE_H_
 #define HARDWARE_MCP3008_HARDWARE_H_
 

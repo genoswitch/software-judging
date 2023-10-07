@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef MCP3008_MCP3008_H_
 #define MCP3008_MCP3008_H_
 

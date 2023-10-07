@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef PIO_MCP3008_PIO_H_
 #define PIO_MCP3008_PIO_H_
 

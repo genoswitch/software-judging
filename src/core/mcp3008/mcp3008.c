@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // Accompanying header file
 #include "mcp3008.h"
 
