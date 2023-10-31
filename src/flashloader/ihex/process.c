@@ -21,7 +21,6 @@ uint32_t count = 0;
 // is passed a pointer to rec
 void processRecord(ihexRecord *rec)
 {
-    //__breakpoint();
     switch (rec->type)
     {
     case UHEX_TYPE_CUSTOM_DATA:

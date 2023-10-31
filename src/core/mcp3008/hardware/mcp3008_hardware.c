@@ -64,7 +64,6 @@ uint16_t mcp3008_read_hardware(spi_dual_inst *inst, uint8_t channel, bool differ
         // Send the SPI command
 
         gpio_put(inst->pinout->csn, 0);
-        __breakpoint();
         spi_write_read_blocking(inst->spi_hw, output_buffer, input_buffer, BUF_LEN);
         gpio_put(inst->pinout->csn, 1);
 

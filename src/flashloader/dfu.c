@@ -100,10 +100,6 @@ void tud_dfu_download_cb(uint8_t alt, uint16_t block_num, uint8_t const *data, u
         rec.sectionId = sectionId;
 
         int result = parseRecord(buf, &rec);
-        if (result == 0)
-        {
-            __breakpoint();
-        }
         processRecord(&rec);
 
         // If the ulba is different to what is saved, update the variable.
